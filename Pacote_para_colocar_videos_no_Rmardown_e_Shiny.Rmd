@@ -1,0 +1,66 @@
+---
+title: "Pacote para colocar videos no Rmardown e Shiny"
+author: "Steven Dutt Ross"
+date: "17 de outubro de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#devtools::install_github("ijlyttle/vembedr")
+#http://ijlyttle.github.io/vembedr/
+```
+Examples
+
+For these examples, it can be useful to load the htmltools package along with the vembedr package.
+```{r}
+library("htmltools")
+library("vembedr")
+```
+With the function embed_url(), you can use the URL from your browser to embed video:
+```{r}
+embed_url("https://www.youtube.com/watch?v=uV4UpCq2azs")
+```
+
+
+```{r}
+embed_youtube("1-vcErOPofQ")
+```
+
+```{css}
+.vembedr {
+  display: inline-block;
+  border-radius: 25px; /* adjust it to your needs */
+  overflow: hidden;
+}
+
+.vembedr iframe {
+  display: block;
+  border: none;
+}
+```
+
+
+```{r}
+embed_vimeo("189919038") %>%
+  div(class = "vembedr") %>%
+  div(align = "center")
+```
+
+
+```{r}
+embed_user2017("Room-202-Lightning-Talks") %>% 
+  use_start_time("26m35s")
+```
+
+Note for GitHub README and RStudio viewer
+
+The GitHub Markdown renderer does not support video embedding.
+
+If you use the RStudio-IDE viewer to preview your work, please note that RStudio have made the design choice not to allow arbitrary external web-content in the IDE, which is wholly appropriate. However, with the advent of the learnr package, the IDE-viewer supports embedding of Vimeo and YouTube videos.
+
+Otherwise, you can simply open your preview in an external browser
