@@ -1,0 +1,5 @@
+#https://pkg.garrickadenbuie.com/xaringanthemer/
+
+# install.packages("devtools")
+devtools::install_github("gadenbuie/xaringanthemer")
+

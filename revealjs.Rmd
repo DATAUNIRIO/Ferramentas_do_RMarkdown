@@ -1,0 +1,34 @@
+---
+title: "Habits"
+author: John Doe
+date: March 22, 2005
+output:
+  revealjs::revealjs_presentation:
+    theme: solarized
+    reveal_options:
+      slideNumber: true
+---
+
+# In the morning
+
+## Getting up
+
+- Turn off alarm
+- Get out of bed
+
+## Breakfast {data-background=#ff0000}
+
+- Eat eggs
+- Drink coffee
+
+# In the evening {data-transition-speed="fast"}
+
+## Dinner {data-transition="zoom"}
+
+- Eat spaghetti
+- Drink wine
+
+## Going to sleep
+
+- Get in bed
+- Count sheep
