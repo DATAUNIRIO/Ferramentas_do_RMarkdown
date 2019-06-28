@@ -1,0 +1,526 @@
+---
+title: "Machado de Assis no RMarkdown"
+author:
+- Steven Dutt-Ross
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+<style>
+body {
+    background-color: #f7f5de;
+}
+</style>
+<!--
+<style>
+body {
+    background-color: #ceefee;
+}
+</style>
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Fernando Pessoa
+## Poema em linha reta
+
+Nunca conheci quem tivesse levado porrada.
+Todos os meus conhecidos têm sido campeões em tudo.
+
+E eu, tantas vezes reles, tantas vezes porco, tantas vezes vil,
+Eu tantas vezes irrespondivelmente parasita,
+Indesculpavelmente sujo,
+Eu, que tantas vezes não tenho tido paciência para tomar banho,
+Eu, que tantas vezes tenho sido ridículo, absurdo,
+Que tenho enrolado os pés publicamente nos tapetes das
+etiquetas,
+Que tenho sido grotesco, mesquinho, submisso e arrogante,
+Que tenho sofrido enxovalhos e calado,
+Que quando não tenho calado, tenho sido mais ridículo ainda;
+Eu, que tenho sido cômico às criadas de hotel,
+Eu, que tenho sentido o piscar de olhos dos moços de fretes,
+Eu, que tenho feito vergonhas financeiras, pedido emprestado sem pagar,
+Eu, que, quando a hora do soco surgiu, me tenho agachado
+Para fora da possibilidade do soco;
+Eu, que tenho sofrido a angústia das pequenas coisas ridículas,
+Eu verifico que não tenho par nisto tudo neste mundo.
+
+Toda a gente que eu conheço e que fala comigo
+Nunca teve um ato ridículo, nunca sofreu enxovalho,
+Nunca foi senão príncipe - todos eles príncipes - na vida...
+
+Quem me dera ouvir de alguém a voz humana
+Que confessasse não um pecado, mas uma infâmia;
+Que contasse, não uma violência, mas uma cobardia!
+Não, são todos o Ideal, se os oiço e me falam.
+Quem há neste largo mundo que me confesse que uma vez foi vil?
+Ó príncipes, meus irmãos,
+
+**Arre, estou farto de semideuses!
+Onde é que há gente no mundo?**
+
+Então sou só eu que é vil e errôneo nesta terra?
+
+Poderão as mulheres não os terem amado,
+Podem ter sido traídos - mas ridículos nunca!
+E eu, que tenho sido ridículo sem ter sido traído,
+Como posso eu falar com os meus superiores sem titubear?
+Eu, que venho sido vil, literalmente vil,
+Vil no sentido mesquinho e infame da vileza.
+
+
+
+
+##### Van Gogh
+![](http://big.assets.huffingtonpost.com/ohmyvangosh.gif)
+<br>
+<br>
+
+
+## Lisbon Revisited (1923)
+
+NÃO: Não quero nada.
+Já disse que não quero nada.
+
+Não me venham com conclusões!
+A única conclusão é morrer.
+
+Não me tragam estéticas!
+Não me falem em moral!
+
+Tirem-me daqui a metafísica!
+Não me apregoem sistemas completos, não me enfileirem conquistas
+Das ciências (das ciências, Deus meu, das ciências!) —
+Das ciências, das artes, da civilização moderna!
+
+**Que mal fiz eu aos deuses todos?**
+
+Se têm a verdade, guardem-na!
+
+Sou um técnico, mas tenho técnica só dentro da técnica.
+Fora disso sou doido, com todo o direito a sê-lo.
+Com todo o direito a sê-lo, ouviram?
+
+Não me macem, por amor de Deus!
+
+**Queriam-me casado, fútil, quotidiano e tributável?**
+Queriam-me o contrário disto, o contrário de qualquer coisa?
+Se eu fosse outra pessoa, fazia-lhes, a todos, a vontade.
+Assim, como sou, tenham paciência!
+Vão para o diabo sem mim,
+Ou deixem-me ir sozinho para o diabo!
+Para que havemos de ir juntos?
+
+Não me peguem no braço!
+Não gosto que me peguem no braço. Quero ser sozinho.
+Já disse que sou sozinho!
+Ah, que maçada quererem que eu seja da companhia!
+
+Ó céu azul — o mesmo da minha infância —
+Eterna verdade vazia e perfeita!
+Ó macio Tejo ancestral e mudo,
+Pequena verdade onde o céu se reflete!
+Ó mágoa revisitada, Lisboa de outrora de hoje!
+Nada me dais, nada me tirais, nada sois que eu me sinta.
+
+Deixem-me em paz! Não tardo, que eu nunca tardo...
+E enquanto tarda o Abismo e o Silêncio quero estar sozinho! 
+
+![](https://media.giphy.com/media/jZtEA0nyCrVxm/giphy.gif)
+
+# Machado de Assis
+## Carolina
+Querida, ao pé do leito derradeiro
+Em que descansas dessa longa vida,
+Aqui venho e virei, pobre querida,
+Trazer-te o coração do companheiro.
+Pulsa-lhe aquele afeto verdadeiro
+Que, a despeito de toda a humana lida,
+Fez a nossa existência apetecida
+E num recanto pôs o mundo inteiro.
+Trago-te flores – restos arrancados
+Da terra que nos viu passar unidos
+E ora mortos nos deixa e separados.
+Que eu, se tenho nos olhos malferidos
+Pensamentos de vida formulados,
+São pensamentos idos e vividos.
+ 
+## A uma senhora que me pediu versos
+Pensa em ti mesma, acharás
+Melhor poesia,
+Viveza, graça, alegria,
+Doçura e paz.
+Se já dei flores um dia,
+Quando rapaz,
+As que ora dou têm assaz
+Melancolia.
+Uma só das horas tuas
+Valem um mês
+Das almas já ressequidas.
+Os sóis e as luas
+Creio bem que Deus os fez
+Para outras vidas.
+ 
+## Livros e flores
+Teus olhos são meus livros.
+Que livro há aí melhor,
+Em que melhor se leia
+A página do amor?
+Flores me são teus lábios.
+Onde há mais bela flor,
+Em que melhor se beba
+O bálsamo do amor?
+ 
+## No alto
+O poeta chegara ao alto da montanha,
+E quando ia a descer a vertente do oeste,
+Viu uma cousa estranha,
+Uma figura má.
+Então, volvendo o olhar ao subtil, ao celeste,
+Ao gracioso Ariel, que de baixo o acompanha,
+Num tom medroso e agreste
+Pergunta o que será.
+Como se perde no ar um som festivo e doce,
+Ou bem como se fosse
+Um pensamento vão,
+Ariel se desfez sem lhe dar mais resposta.
+Para descer a encosta
+O outro lhe deu a mão.
+ 
+## Círculo vicioso
+Bailando no ar, gemia inquieto vagalume:
+“Quem me dera que eu fosse aquela loira estrela
+Que arde no eterno azul, como uma eterna vela!”
+Mas a estrela, fitando a lua, com ciúme:
+“Pudesse eu copiar-te o transparente lume,
+Que, da grega coluna à gótica janela,
+Contemplou, suspirosa, a fronte amada e bela”
+Mas a lua, fitando o sol com azedume:
+“Mísera! Tivesse eu aquela enorme, aquela
+Claridade imortal, que toda a luz resume”!
+Mas o sol, inclinando a rútila capela:
+Pesa-me esta brilhante auréola de nume…
+Enfara-me esta luz e desmedida umbela…
+Por que não nasci eu um simples vagalume?”…
+ 
+## ERRO
+Erro é teu. Amei-te um dia
+Com esse amor passageiro
+Que nasce na fantasia
+E não chega ao coração;
+Não foi amor, foi apenas
+Uma ligeira impressão;
+Um querer indiferente,
+Em tua presença, vivo,
+Morto, se estavas ausente,
+E se ora me vês esquivo,
+Se, como outrora, não vês
+Meus incensos de poeta
+Ir eu queimar a teus pés,
+É que, — como obra de um dia,
+Passou-me essa fantasia.
+Para eu amar-te devias
+Outra ser e não como eras.
+Tuas frívolas quimeras,
+Teu vão amor de ti mesma,
+Essa pêndula gelada
+Que chamavas coração,
+Eram bem fracos liames
+Para que a alma enamorada
+Me conseguissem prender;
+Foram baldados tentames,
+Saiu contra ti o azar,
+E embora pouca, perdeste
+A glória de me arrastar
+Ao teu carro… Vãs quimeras!
+Para eu amar-te devias
+Outra ser e não como eras…
+(Crisálidas – 1864)
+ 
+## EPITÁFIO DO MÉXICO
+Dobra o joelho: — é um túmulo.
+Embaixo amortalhado
+Jaz o cadáver tépido
+De um povo aniquilado;
+A prece melancólica Reza-lhe em torno à cruz.
+Ante o universo atônito
+Abriu-se a estranha liça,
+Travou-se a luta férvida
+Da força e da justiça;
+Contra a justiça, ó século,
+Venceu a espada e o obus.
+Venceu a força indômita;
+Mas a infeliz vencida
+A mágoa, a dor, o ódio,
+Na face envilecida
+Cuspiu-lhe. E a eterna mácula
+Seus louros murchará.
+E quando a voz fatídica
+Da santa liberdade
+Vier em dias prósperos
+Clamar à humanidade,
+Então revivo o México
+Da campa surgirá.
+(Crisálidas – 1864)
+ 
+## O VERME
+Existe uma flor que encerra
+Celeste orvalho e perfume.
+Plantou-a em fecunda terra
+Mão benéfica de um nume.
+Um verme asqueroso e feio,
+Gerado em lodo mortal,
+Busca esta flor virginal
+E vai dormir-lhe no seio.
+Morde, sangra, rasga e mina,
+Suga-lhe a vida e o alento;
+A flor o cálix inclina;
+As folhas, leva-as o vento.
+Depois, nem resta o perfume
+Nos ares da solidão…
+Esta flor é o coração,
+Aquele verme o ciúme.
+(Falenas – 1870)
+ 
+## Soneto de natal
+Um homem, — era aquela noite amiga,
+Noite cristã, berço do Nazareno, —
+Ao relembrar os dias de pequeno,
+E a viva dança, e a lépida cantiga,
+Quis transportar ao verso doce e ameno
+As sensações da sua idade antiga,
+Naquela mesma velha noite amiga,
+Noite cristã, berço do Nazareno.
+Escolheu o soneto . . . A folha branca
+Pede-lhe a inspiração; mas, frouxa e manca,
+A pena não acode ao gesto seu.
+E, em vão lutando contra o metro adverso,
+Só lhe saiu este pequeno verso:
+“Mudaria o Natal ou mudei eu?”
+ 
+## Os dois horizontes
+A M. Ferreira Guimarães (1863)
+Dous horizonte fecham nossa vida:
+Um horizonte, — a saudade
+Do que não há de voltar;
+Outro horizonte, — a esperança
+Dos tempos que hão de chegar;
+No presente, — sempre escuro, —
+Vive a alma ambiciosa
+Na ilusão voluptuosa
+Do passado e do futuro.
+Os doces brincos da infância
+Sob as asas maternais,
+O vôo das andorinhas,
+A onda viva e os rosais.
+O gozo do amor, sonhado
+Num olhar profundo e ardente,
+Tal é na hora presente
+O horizonte do passado.
+Ou ambição de grandeza
+Que no espírito calou,
+Desejo de amor sincero
+Que o coração não gozou;
+Ou um viver calmo e puro
+À alma convalescente,
+Tal é na hora presente
+O horizonte do futuro.
+No breve correr dos dias
+Sob o azul do céu, — tais são
+Limites no mar da vida:
+Saudade ou aspiração;
+Ao nosso espírito ardente,
+Na avidez do bem sonhado,
+Nunca o presente é passado,
+Nunca o futuro é presente.
+Que cismas, homem? — Perdido
+No mar das recordações,
+Escuto um eco sentido
+Das passadas ilusões.
+Que buscas, homem? — Procuro,
+Através da imensidade,
+Ler a doce realidade
+Das ilusões do futuro.
+Dous horizontes fecham nossa vida.
+
+Fonte: https://escolaeducacao.com.br/10-poemas-de-machado-de-assis/
+
+##### Esher
+![](https://media.giphy.com/media/KhD7MU5Kt7F16/giphy.gif)
+
+# RMarkdown
+
+## Para fazer tópicos/bullets.
+> "Se nos ferem, não sangramos?"
+
+1. Hamlet,
+2. MacBeth,
+3. Otelo,
+4. O Mercador de Veneza,
+5. Romeu & Julieta.
+
+# "Winter Is Coming"
+## "Winter Is Coming"
+### "Winter Is Coming"
+#### "Winter Is Coming"
+##### "Winter Is Coming"
+###### "Winter Is Coming"
+
+## Colocando hiperlink
+Esse é o [site do GAE](http://gae.uniriotec.br/)
+
+## Como colocar imagem local?
+Basta adicionar o comando:
+```
+![](C:/enderenco/da/sua/imagem.png)
+```
+ou o comando:
+
+```
+![](https://www.r-project.org/Rlogo.png)
+
+```
+
+## Aparência e Estilo
+
+**Bootstrap**: temas válidos "default", "cerulean", "journal", "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
+"simplex", and "yeti".  
+
+**Highlight style**: estilos possíveis "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", "haddock", and "textmate". 
+
+Exemplo 1:
+```
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango
+```
+Exemplo 2:
+```
+output:
+  pdf_document:
+  toc: true
+  highlight: zenburn
+  always_allow_html: yes
+  word_document:
+  fig_width: 5
+  fig_height: 5
+  fig_caption: true
+  always_allow_html: yes
+  html_document:
+  theme: cerulean
+  highlight: tango
+  toc: true
+  toc_float: true
+  code_folding: hide
+```
+
+
+## Programando em R dentro do Markdown
+### Gráficos
+#### Diagrama de Dispersão
+
+```{r cars, echo=TRUE}
+#```{r cars, echo=FALSE}
+#```{r cars, results='hide'}
+#```{r cars, warning=FALSE}
+#```{r cars, menssage=FALSE}
+plot(cars$speed, cars$dist)
+plot(cars$speed, cars$dist, col="#0d6887",pch=19,main="Diagrama de Dispersão", xlab="Velocidade", ylab ="o que é disp?" )
+abline(lsfit(cars$speed, cars$dist),col="#032435", lty=2, lwd=4)
+```
+
+## Cadê o banco de dados
+```{r}
+data(mtcars)
+library(DT)
+datatable(mtcars)
+```
+
+
+## Matriz de Correlação
+```{r correlacao, echo=TRUE}
+cor(mtcars[,c("disp","drat","hp","mpg","qsec","wt")])
+```
+
+Mas que coisa sem graça!
+```{r correlacao2, echo=TRUE}
+library(corrplot)
+M <- cor(mtcars[,c("disp","drat","hp","mpg","qsec","wt")])
+corrplot(M, method="circle")
+```
+
+
+## Nuvem de palavras
+
+Como criar a minha nuvem de palavras?
+
+```{r wordcloud, echo=TRUE}
+library(wordcloud2)
+wordcloud2(data = demoFreq)
+```
+
+
+## LaTeX
+
+Temos duas formas de **colocar equações do LaTeX no RMarkdown**
+A primeira....
+
+```
+$$r =\frac{COV(x,y)}{S_xS_y} $$
+
+A segunda...
+
+Que tal colocar a **função de densidade da Normal**?
+
+<!--Colocar a formula no quadro antes-->
+
+\begin{equation}
+f(x) = \frac{1}{2\pi\sigma^{2}} e^{-\frac{1}{2 \sigma^{2}} (x - \mu)^{2}}
+\end{equation}
+
+## Um modelo de regressão
+
+```{r regressao, echo=TRUE}
+data(mtcars)
+modelo1<-lm(mpg~hp, data=mtcars)
+modelo1
+```
+
+A estimativa do $\beta_1$ desse modelo linear simples é
+`r coef(modelo1)[2]`.
+
+### E se fosse uma apresentação? como devemos fazer?
+<br>
+Existem diversas forams de apresentações no Rmarkdown. As mais utilizadas são:<br>
+a. ioslides_presentation<br>
+b. slidy_presentation<br>
+c. beamer_presentation<br>
+d. slidify <br>
+e. sharigan <br>
+f. reveals.js <br>
+g. Rpresentation
+
+Exemplos:
+```
+output: ioslides_presentation
+output: slidy_presentation
+```
+
+## Usando CSS
+
+```
+<style>
+body {
+    background-color: #f7f5de;
+}
+</style>
+```

@@ -1,0 +1,87 @@
+---
+title: "Embed videos into your Rmarkdown"
+author: "Steven Dutt Ross"
+date: "28 de junho de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## vebmedr
+
+The goal of the vembedr package is to make it a little bit easier for you to embed videos into your rmarkdown documents and your shiny apps. Three services are currently supported: YouTube, Vimeo, and Microsoft Channel 9 (including UseR! 2016 and 2017 videos).
+
+
+## Installation
+
+```{r, eval=FALSE}
+#You can install the latest released version from CRAN with:
+install.packages("vembedr")
+
+#or the latest development version from GitHub with:
+devtools::install_github("ijlyttle/vembedr")
+```
+
+
+With the function embed_url(), you can use the URL from your browser to embed video:
+
+```{r}
+library("htmltools")
+library("vembedr")
+embed_url("https://www.youtube.com/watch?v=UeMheG03w4s")
+
+```
+
+```{r}
+suggest_embed("https://www.youtube.com/watch?v=UeMheG03w4s?t=1m32s")
+```
+
+To embed a YouTube (or Vimeo, or Channel 9) video you can use its identifier, which you can get from the original URL.
+
+```{r}
+embed_youtube("UeMheG03w4s?t=1m32s")
+
+```
+
+
+```{css}
+.vembedr {
+  display: inline-block;
+  border-radius: 25px; /* adjust it to your needs */
+  overflow: hidden;
+}
+
+.vembedr iframe {
+  display: block;
+  border: none;
+}
+```
+
+
+
+To embed a Vimeo with some custom formatting:
+
+    call embed_vimeo() using the Vimeo identifier, then
+    wrap that in <div/> using our new vembedr class, then
+    wrap that in a <div/> that centers its contents
+
+```{r}
+embed_vimeo("189919038") %>%
+  div(class = "vembedr") %>%
+  div(align = "center")
+
+```
+
+
+ou can also specify a start time. Please note that for Vimeo, specifying a start time implies that the video will be auto-played (which can be annoying).
+
+Here’s an example using a lightning presentation from UseR!2017:
+
+```{r}
+embed_user2017("Room-202-Lightning-Talks") %>% 
+  use_start_time("26m35s")
+
+```
+
