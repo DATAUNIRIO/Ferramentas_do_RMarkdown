@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "Steven Dutt Ross"
+date: "5 de julho de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# https://github.com/bwlewis/crosstool
+```
+
+# Using ‘receiver’ to debug crosstalk key state
+
+```{r}
+library(crosstalk)
+library(crosstool)
+library(htmltools)
+library(d3scatter) # devtools::install_github("jcheng5/d3scatter")
+
+x = iris[sample(150, 50), ]
+rownames(x) = NULL
+x$key = state.name
+sd = SharedData$new(x, key=~key)
+d1 = d3scatter(sd, x=~Petal.Length, y=~Petal.Width, color=~Species, width="100%")
+d2 = d3scatter(sd, x=~Sepal.Length, y=~Sepal.Width, color=~Species, width="100%")
+
+rx = crosstool(sd, "receiver",  html="<span style='font-size:14pt; word-wrap:break-word;'/>", value="innerText", width="100%")
+bscols(d1, d2, rx, widths=c(4,4,4))
+```
+
+# Using ‘transmitter’ to set initial selection handle state for a crosstalk group
+
+This is one way to address the discussion in https://github.com/rstudio/crosstalk/issues/16.
+
+```{r}
+library(crosstalk)
+library(crosstool)
+library(htmltools)
+library(d3scatter)
+
+x = iris[sample(150, 50), ]
+rownames(x) = NULL
+x$key = state.name
+sd = SharedData$new(x, key=~key)
+d1 = d3scatter(sd, x=~Petal.Length, y=~Petal.Width, color=~Species, width="100%")
+d2 = d3scatter(sd, x=~Sepal.Length, y=~Sepal.Width, color=~Species, width="100%")
+
+rx = crosstool(sd, "receiver",  html="<span style='font-size:14pt; word-wrap:break-word;'/>", value="innerText", width="100%")
+
+# Make an initial random selection and use the 'init' option
+i = sample(state.name, 10)
+tx = crosstool(sd, "transmitter", init=i)
+
+bscols(d1, d2, rx, tx, widths=c(4,4,4,0))
+```
+
+# Using a transceiver to set initial filter handle state
+
+Use the init and reset arguments of the transceiver to set up an initial filter handle state and then reset it when other filters are activated. Based on the filter example from https://rstudio.github.io/crosstalk/using.html.
+
+```{r}
+library(crosstalk)
+library(htmltools)
+library(crosstool)
+library(d3scatter)
+
+shared_mtcars <- SharedData$new(mtcars)
+# debug the key state to show active filter keys
+sp = crosstool(shared_mtcars, "receiver", "<span style='font-size:14pt; word-wrap:break-word;'/>", value="innerText", channel="filter")
+# Make an initial random filter and use the 'init' option
+i = sample(rownames(mtcars), 10)
+tx = crosstool(shared_mtcars, "transceiver", init=i, channel="filter", reset=rownames(mtcars))
+
+bscols(widths = c(3,NA,NA),
+  list(
+    filter_checkbox("cyl", "Cylinders", shared_mtcars, ~cyl, inline = TRUE),
+    filter_slider("hp", "Horsepower", shared_mtcars, ~hp),
+    filter_select("auto", "Automatic", shared_mtcars, ~ifelse(am == 0, "Yes", "No"))
+  ),
+  list(d3scatter(shared_mtcars, ~wt, ~mpg, ~factor(cyl), width="100%", height=250), sp),
+  list(d3scatter(shared_mtcars, ~hp, ~qsec, ~factor(cyl), width="100%", height=250), tx)
+)
+```
+
+

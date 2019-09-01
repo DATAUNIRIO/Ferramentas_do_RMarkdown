@@ -1,0 +1,64 @@
+---
+title: "Tippy"
+author: "Steven Dutt Ross"
+date: "13 de julho de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tippy)
+
+# standard
+tippy("Hover me!", tooltip = "Hi, I'm the tooltip!")
+```
+
+```{r}
+tippy(
+  "Hover me!", 
+  tooltip = "Hi, I'm the tooltip!", 
+  placement = "right",
+  arrow = TRUE
+)
+```
+
+```{r}
+tippy("<strong>Works with html!</strong>", 
+  tooltip = "<strong>Hi</strong>, I'm the tooltip!", 
+  allowHTML = TRUE,
+  animation = "scale",
+  duration = 1000, 
+  placement = "bottom",
+  theme = "light"
+)
+```
+
+
+```{r cars}
+library(tippy)
+tippy("<strong>Works with html!</strong>", 
+  tooltip = "<strong>Hi</strong>, I'm the tooltip!", 
+  allowHTML = TRUE,
+  animation = "scale",
+  duration = 1000, 
+  placement = "bottom",
+  theme = "light"
+)
+```
+
+```{r}
+tippy("Hover me!", tooltip = "Hi, I'm the tooltip!")
+tippy("Hover me!", tooltip = "Hi, I'm the tooltip!", placement = "right",
+  theme = "light")
+tippy("Hover me!", tooltip = "Hi, I'm the tooltip!", animation = "scale",
+  duration = 1000, placement = "bottom")
+tippy("Click me!", tooltip = "Hi, I'm the tooltip!", trigger = "click",
+  theme = "light")
+```
+
+
+
+

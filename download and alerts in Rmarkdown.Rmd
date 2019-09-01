@@ -1,0 +1,78 @@
+---
+title: "Bootstrap alerts in R Markdown"
+author: "David A. Selby"
+output:
+  html_document:
+    keep_md: yes
+    code_download: yes
+---
+
+FONTE: https://selbydavid.com/vignettes/alerts.html#
+
+The default errors, warnings and messages in R Markdown are OK, but HTML output could look so much better in HTML, considering the templates use Twitter Bootstrap by default.
+
+Let's see what we can do instead with a few CSS classes!
+
+```{r setup, include=FALSE}
+knitr::knit_hooks$set(
+   error = function(x, options) {
+     paste('\n\n<div class="alert alert-danger">',
+           gsub('##', '\n', gsub('^##\ Error', '**Error**', x)),
+           '</div>', sep = '\n')
+   },
+   warning = function(x, options) {
+     paste('\n\n<div class="alert alert-warning">',
+           gsub('##', '\n', gsub('^##\ Warning:', '**Warning**', x)),
+           '</div>', sep = '\n')
+   },
+   message = function(x, options) {
+     paste('\n\n<div class="alert alert-info">',
+           gsub('##', '\n', x),
+           '</div>', sep = '\n')
+   }
+)
+```
+
+```{r oneliners, error = TRUE}
+stop('This should break!')
+warning('Watch out!')
+message('This is a message for you')
+```
+
+All this was achieved with the following knitr settings. Potentially, LaTeX templates could be written for PDF and Beamer output as well.
+
+```{r ref.label = 'setup', echo = TRUE, eval = FALSE}
+```
+
+Notice the regular expressions, which replace the `## Error`/`## Warning` with bold text. (It is necessary to get rid of the hashes to avoid the text being turned into a level two (`<h2>`) header, but you could also adjust the `comment` chunk option.)
+Is there a way of accessing the errors/warnings/messages before this stage for a more elegant solution?
+
+What if the messages go onto multiple lines? The double `gsub` should take care of it.
+
+```{r multiline, error = TRUE}
+stop('This\nshould\nbreak!\n')
+warning('Watch\nout!')
+message('Let\nthat\nbe\na\nmessage')
+```
+
+A better solution, perhaps, might be to read carefully what is written at https://yihui.name/knitr/hooks/ and consider the `knitr::render_html()` function.
+Doing things this way might also side-step the problem of writing conditional markup for the different output formats.
+
+After a bit of research, the solution to the multi-line commenting problem appears to lie in the functions `knitr:::wrap.error`, `wrap.message` and `wrap.warning`. My idea is: just trick them into thinking that `options$comment` has been set to an empty string, and leave everything else the same.
+
+```{r renderHTML, eval = FALSE}
+wrap.error <- function(x, options) {
+  options$comment <- ""
+  knitr:::msg_wrap(paste(x$message, collapse = ""), "error", options)
+}
+wrap.message <- function(x, options) {
+  options$comment <- ""
+  knitr:::msg_wrap(paste(x$message, collapse = ""), "message", options)
+}
+wrap.warning <- function(x, options) {
+  options$comment <- ""
+  knitr:::msg_wrap(paste(x$message, collapse = ""), "warning", options)
+}
+```
+
+But it is not easy, as far as I can tell, to replace non-exported S3 functions in packages, so short of forking the entire `knitr` package and rebuilding it with this file changed, the find-and-replace strategy will have to do.
