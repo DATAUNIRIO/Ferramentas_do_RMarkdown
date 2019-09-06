@@ -5,14 +5,36 @@ date: "03/09/2019"
 output: html_document
 ---
 
-```{css}
+
+```{css, echo=FALSE}
 @import url('https://fonts.googleapis.com/css?family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Chilanka&display=swap');
 body{
-  font-family: 'Lobster', cursive;
+  color: #198c7b;
+  background-color: #f7f5de;
+  font-family: 'Chilanka', cursive;
+  #font-family: 'Lobster', cursive;  
+  #font-family: 'Satisfy', cursive;
+  font-size: 22px;
+}
+
+p::first-letter {
+  font-size: 200%;
+  color: #116155;
+  line-height: 70px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: #116155;
+  font-family: 'Chilanka', cursive;
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+  background-color: #116155;
+  font-family: 'Great Vibes', cursive;
 }
 
 ```
-
 
 
 ```{r setup, include=FALSE}
