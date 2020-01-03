@@ -1,0 +1,578 @@
+---
+output:
+  html_document:
+    theme: journal
+    toc: TRUE
+    toc_float: TRUE  
+    toc_depth: 3
+---
+
+Data Science Thought Leadership
+===============================
+
+#### DATA 607 Project 3
+#### March 24, 2019
+#### Team SPARC
+
+* [Santosh Cheruku](https://github.com/san123i)
+* [Samantha Deokinanan](https://github.com/greeneyefirefly)
+* [Rajwant Mishra](https://github.com/rajwantmishra)
+* [Priya Shaji](https://github.com/PriyaShaji)
+
+#### Github 
+
+All the project files, codes, and graphics are available under [Project 3 repository](https://github.com/greeneyefirefly/MSDS-DATA-607-Project-3) on Github.
+
+#### Rpub 
+
+The presentation is published on [Project 3](http://rpubs.com/greeneyefirefly/data607-Project3) Rpub.
+
+#### Project Documentation 
+
+All the project work and ideas were documented and available under [Project Documentation](https://github.com/greeneyefirefly/MSDS-DATA-607-Project-3/blob/master/Project3_documentation.docx) on Github.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+##################################################################
+#               Add All Required R Packages Here              #
+##################################################################
+
+library(dplyr)
+library(DT)
+library(ggplot2)
+library(gridExtra)
+library(kableExtra)
+library(knitr)
+library(leaflet)
+library(lubridate)
+library(mongolite)
+library(plotly)
+library(readr)
+library(rebus)     
+library(rjson)
+library(rvest)    
+library(stringr)
+library(tidyverse)
+library(XML)
+library(xml2)
+```
+
+***
+
+### Overview {.tabset .tabset-fade .tabset-pills}
+
+In this project, we breakdown how we built a database of influential people who are leading the charge in what the *Harvard Business Review* suggested to be the sexiest job field of the 21st century, that is Data Science. Because their skills and knowledge lead them to a successful data science career, with our database, we conducted a few data analysis to further discuss the many different paths that can lead you too to a lucrative, rewarding career as a data scientist. 
+
+> Face of the Leaders
+
+<style>
+body {
+    margin: 0;            /* Reset default margin */
+}
+iframe {
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;         /* Reset default border */
+    height: 350px;        /* Viewport-relative units */
+    width: 70vw;
+}
+.container-fluid.main-container {
+    max-width: 99%;
+}
+
+iframe navbar navbar-fixed-bottom,  iframe div#pageheader, iframe  navbar .navbar-inner
+{
+dispaly: none;
+}
+
+</style>
+<iframe src="http://rpubs.com/Rajwantmishra/project_ppl" width="400" height="200"></iframe>
+
+***
+
+#### Motivation 
+
+Team SPARC decided to pick the challenging project between the two options given. Everyone decided to opt for the alternate project since it gave a definite target, and to hit this target, we had to explore numerous sources of data which were not freely available. This would challenge the team to formulate various solutions in addressing issues. Moreover, the team identified that there was a definite scope to use web scraping and NoSQL databases, thus the procedures were deemed immensely useful skills which can be transferred into a work skill.
+
+***  
+#### Team Work & Communication
+* Along with existing channels like *Slack*, the team also utilized *WhatsApp*, *Skype* and *Google Hangouts* to explore screen sharing options for discussions.
+* Codes were shared through *Github*, *Google Spreadsheet*, and *rpub*.
+
+***  
+#### Timeline  
+3/14 - Project Initiation Discussion  
+3/16 - First Communication in Exploring Possible Options  
+3/17 - Screen Share and KT Session  
+3/19 - Touch Base on Task Status  
+3/20 - Presentation Discussion  
+3/23 - Presentation Practice #1   
+**3/24 - Project #3 Submission**  
+3/25 - Presentation Practice #2  
+**3/27 - Project #3 Presentation**  
+
+***
+### Methodology   
+#### Approaching the Problem  {.tabset .tabset-fade .tabset-pills}
+
+We required any reliable sources that list renowned data scientists and analytical thinkers of our time. This led to the following inclusion criteria which all possible websites sources must fulfill before we commenced data extraction:  
+
+* has a professional profile (or link to an active profile) for the leader.
+* has identified the leader's geographic location.
+* has a description of their area of expertise as it related to data science.
+
+Based on these tasks, we identified the following steps and mapped our procedures to successfully accomplish our aim for this project.
+
+```{r message=FALSE, warning=FALSE,echo=FALSE , paged.print=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/greeneyefirefly/MSDS-DATA-607-Project-3/master/picture%201.png") 
+```
+
+***
+##### Source Identification
+
+Utilizing a member-only *Google Spreadsheet*, we shared ideal sources that matched well with our inclusion criteria, such as web articles and blogs. Each of us then reviewed what the other had referenced for a final, collective decision on whether we would scrape from the source or not. 
+
+We ran into a few concerns during this search, primarily in regard to that there was no definite source which could supply all the needed information. Therefore, we decided to pull necessary information from various additional sources such as Twitter, LinkedIn, Blogs and other online articles. 
+
+Twitter and LinkedIn proved to be our best sources for additional information about their expertise, in addition to containing other variables we thought would be interesting to investigate.
+
+***
+<center> *Twitter* </center>   
+Twitter is a social networking site with more than 560 million active users. On average, 5700 tweets are posted every second.  Due to its in real time interaction, Twitter allows users to report on what is going on during an event can happen as the incident unfolds.
+
+<center> *LinkedIn* </center>   
+LinkedIn is a more business-oriented social networking site. There are more than 240 million active users, most of whom are of in the workforce. This platform a source of information that pertains to professional fields and insights. Here, too, there are various components that are of interest which can be extracted.  
+
+***
+
+```{r message=FALSE, warning=FALSE,echo=FALSE , paged.print=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/greeneyefirefly/MSDS-DATA-607-Project-3/master/picture%202.png") 
+```
+
+***
+##### Data Collection
+Retrieving correct information from the source website was an important task. HTML was extracted from Chrome using web scrapper and then data was extracted using R. Once the profile links were obtained, extraction from Twitter and LinkedIn could commence.
+
+There are various components of a tweet that can be extracted. These are what we were most interested in:
+
+* User Name: the unique user identifier.
+* Time Stamp: when the tweet was sent.
+* Tweet Text: The body of the tweet.
+* Hashtags: proceeded by a # symbol, a hashtag is often related to a particular topic related to the tweet's main idea.
+* Latitude/Longitude: about 1% of all tweets contains coordinate information.
+
+Similarly, for LinkedIn, the components we were most interested in are:
+
+* Skills: key soft skills and hard skills user identified to possess.
+* Area of Expertise: topics in which the user has work experience.
+* Industry of Work: the general category under which an occupation falls that the user has experiences working in.
+
+The following is a sample of how the data was read from the respective sources. The full code on web scraping can be found at [Project 3 Supporting Rmd](https://raw.githubusercontent.com/greeneyefirefly/MSDS-DATA-607-Project-3/master/Supporting%20Rmd/Project%203%20607.Rmd) on Github. 
+
+<details>
+  <summary> *Sample Code on Scrapping LinkedIn Data* </summary>
+```{r eval=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Update read linkedIn ID data, 18 March
+DataLink <- read_csv("link182.csv")
+location <- NA
+linkSkill <- NA
+linkInterests <- NA
+for ( i in  1: length(DataLink$fullData)){
+  dataLink <- htmlParse(DataLink$fullData[i] )
+  dataLink <- read_html(DataLink$fullData[i])
+  location[i] <- html_nodes(dataLink, "h3.pv-top-card-section__location") %>% 
+    html_text() %>% str_trim() %>% unlist() 
+  linkSkill[i] <- html_nodes(dataLink,"span.pv-skill-category-entity__name-text")  %>%  
+    html_text()  %>% str_trim() %>% unlist() %>% paste(collapse = " | ")
+  linkInterests[i] <- html_nodes(dataLink,"span.pv-entity__summary-title-text")  %>%  
+    html_text() %>% str_trim() %>% unlist() %>% paste(collapse = " | ")
+}
+linkedinData <- tibble(DataLink$Name,DataLink$`web-scraper-start-url`,DataLink$Location,DataLink$Intro,linkSkill,linkInterests)
+```
+</details>
+
+***
+##### Storage & Retrieve
+
+In Mysql, we created databases and set it to the default schema to import the tables from the local file via *Table Data Import Wizard*. In R, we connected to the Mysql database using `dbConnect`. There were two cases before beginning- Case 1: if the table exists, drop it, and Case 2: Else create a new table. Next, the column names and their definition were specified, and the query was written to update the tables. Additionally, we decided to store the extracted data sets onto the MongoDB Atlas (Cloud). We noticed that MongoDB provides a package for R, `mongolite`, which provides APIs required to connect to the cloud and perform data operations. 
+
+The full code can be found on the [Project 3 Supporting Rmd](https://raw.githubusercontent.com/greeneyefirefly/MSDS-DATA-607-Project-3/master/Supporting%20Rmd/Project%203%20607.Rmd) on Github.
+
+<details>
+  <summary> *Sample Code on Creating Database* </summary>
+```{r eval=FALSE}
+CheckDB <- function() {
+  
+# Open Connection 
+  con2 <- dbConnect(RMySQL::MySQL(), dbname = "", host="localhost", user="root",password= "")
+  
+# Drop Table if Exists 
+if(dbExistsTable(con2, "dataurla")){
+    dbRemoveTable(con2,"dataurla")
+  }
+
+# Create the first table for dataurla
+
+query <- "CREATE TABLE `dataurla` (  
+`profile_id`  INT AUTO_INCREMENT,
+`Rank` INT NOT NULL AUTO_INCREMENT,
+`Twitter Handle` VARCHAR(45) NULL,
+`Name` VARCHAR(45) NULL, 
+`TL Score` VARCHAR(45) NULL, 
+`profileURL` VARCHAR(45) NULL,
+`profileIMGURL` VARCHAR(45) NULL,
+`areofExpert` VARCHAR(45) NULL,
+`AreasofExpertise` VARCHAR(45) NULL,
+`company` VARCHAR(45) NULL,
+`intro` VARCHAR(45) NULL,
+`location` VARCHAR(45) NULL,
+`tFollower` VARCHAR(45) NULL,
+`IndustryExperience` VARCHAR(45) NULL,
+`Publications` VARCHAR(45) NULL,
+`Opportunities` VARCHAR(45) NULL,
+`socialURL` VARCHAR(45) NULL,
+`tURL` VARCHAR(45) NULL,
+`linkURL` VARCHAR(45) NULL,
+`thandle` VARCHAR(45) NULL,
+ PRIMARY KEY (`Rank`))"
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+
+# Close Connection
+dbDisconnect(con2)
+}
+
+# Update dataurla table 
+
+query <- sprintf("insert into dataurla (Twitter Handle, Name, TL Score, profileURL, profileIMGURL, areofExpert, AreasofExpertise, company, intro, location, tFollower, IndustryExperience, Publications, Opportunities, socialURL, tURL, linkURL, thandle) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",twitterhandle, name, tlscore, profileurl, profileimgurl, areofexpert, areasofexpertise, company, intro, location, tFollower, industryexperience, publications, opportunities, socialurl, turl, linkurl, thandle)
+  print (query)
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+
+# Get 'Rank' to update dataurla table
+query <- sprintf("select  Rank from dataurla  where Twitter Handle='%s', Name='%s', TL Score='%s', profileURL='%s', profileIMGURL='%s', areofExpert='%s', AreasofExpertise='%s', company='%s', intro='%s', location='%s', tFollower='%s', IndustryExperience='%s', Publications='%s', Opportunities='%s', socialURL='%s', tURL='%s', linkURL='%s', thandle='%s' limit 1",twitterhandle, name, tlscore, profileurl, profileimgurl, areofexpert, areasofexpertise, company, intro, location, tFollower, industryexperience, publications, opportunities, socialurl, turl, linkurl, thandle)
+  
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+data_Rank <- tab1data$Rank
+
+# Close Connection
+dbDisconnect(con2)
+}
+```
+</details>
+
+<details>
+  <summary> *Sample Code on Storing Data* </summary>
+```{r eval=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Saving data to local directory and upload onto MONGO
+write.csv(linkedinData,"linkedin.csv")
+mongoFile$upload("linkedin.csv")
+
+# Connect to MongoDB Atlas
+mongoFile <- gridfs(db = "PROJECT TITLE", url = "mongodb+srv://USER URL", prefix = "fs",options = ssl_options())
+
+# List All File from MongoDB Atlas
+allfiles <- mongoFile$find()
+allfiles
+
+# Download a file by ID or Name
+mongoFile$download("tweet.csv")
+mongoFile$download("dataurlA.csv")
+mongoFile$download("linkedin.csv")
+```
+</details>
+
+
+***
+##### Our Data
+```{r echo=FALSE}
+# Loading the `.csv` files from local source's working directory after downloaded from MongoDB.
+tweet <- read.csv("tweet.csv", header=TRUE, stringsAsFactors = FALSE)
+dataurlA <- read.csv("dataurlA.csv", header=TRUE, stringsAsFactors = FALSE)
+linkedin <- read.csv("linkedin.csv", header=TRUE, stringsAsFactors = FALSE)
+```
+
+> Tweets Scrapped from Twitter Profiles.
+
+```{r echo=FALSE}
+dttweet <- tweet[c(3,4,10)]
+kable(dttweet) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+***
+
+> LinkedIn Profile Information
+
+```{r echo=FALSE}
+dtlinkedin <- linkedin[c(2:4,6)]
+kable(dtlinkedin) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+***
+### Results & Discussion {.tabset .tabset-fade .tabset-pills}
+***
+#### Thought Leaders  
+##### Today's "Thought Leaders" in Data Science
+
+Our data collection enabled us to build the following table of more than 50 of today's data science influencers from around the world. These stars of the business are not just a source of inspiration to data science professionals and aspirants alike but also ensure that you keep abreast of all new developments. Their content is valuable, informative, engaging, and, more importantly, relevant to today's data and technology discussions.
+
+This table provides the links to their Twitter accounts so you can follow to keep up with the current trends, and opportunities in data science and predictive analytics.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+DataSci <- dataurlA[c(3,9,12)]
+DataSci$Twitter <- paste0("[", dataurlA$Twitter.Handle, "](http://", dataurlA$tURL, ")")
+DataSci$AreasofExpertise <- tolower(dataurlA$AreasofExpertise)
+DataSci <- DataSci[-5,]
+colnames(DataSci)[2]<- c("Location")
+kable(DataSci) %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+***  
+The following map of the world locates our thought leaders and highlight the magnitude of their popularity (# of followers, indicated by the size of the circle) on Twitter. You will notice is that most of the thought leaders are in the Midwest-Northeast of the United States of America, but in the United States overall. This may be a result of search bias since as only English websites are scrapped, and Twitter is most popular in the United States than any other country in the world. 
+
+However, we were still able to find a few from other countries, this shows that there are more thought leaders in data science from all around the world even if they are not shown here. Lastly, it is also good to note that the number of followers is one number you should not correlate with the impact of influence these experts possess because some of the least followed leaders have also made great contributions in the field of data science.
+
+>  Most Followed Leaders on Twitter from Around the World
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+formap <- dataurlA[c(3,9:12)]
+formap <- formap[-c(27:30),]
+
+world_basemap <- ggplot() + borders("world", colour = "gray85", fill = "gray80") + geom_point(data = formap, aes(x = Longitude, y = Latitude), colour = 'red', alpha = .75, size=formap$tFollower/100000) +
+scale_size_continuous(range = range(formap$tFollower)) + labs(y = "Latitude",
+        x = "Longitude",
+        title = "Most Followed Leaders on Twitter from Around the World") 
+locations <- leaflet(formap) %>%
+  addTiles() %>%
+  addProviderTiles("Esri.WorldStreetMap") %>%
+  addCircleMarkers(lng = ~Longitude, lat = ~Latitude, popup = ~Name, radius = formap$tFollower/10000, stroke = FALSE)
+
+locations
+```
+
+***
+#### Topics Being Discussed
+##### What are the Topics that Data Scientists Care Most About?
+
+On March 15th, 2019, the last 200 tweets from the Twitter accounts of data scientists were collected. One popular element of a tweet is a hashtag. A hashtag is a type of metadata tag which allows users to apply dynamic, user-generated tagging and makes it possible for others to easily find messages with a specific theme or content. 
+
+Therefore, content related to these tags were frequently being discussed on that day and are some of the things data scientists are currently talking about. It was determined from the tweets that the **Top 20 Hashtags Used by Data Scientists** mentioned are highlighted below. 
+
+<details>
+  <summary> *Code* </summary>
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# Remove the influence of retweets 
+tweetRTremoved <- tweet[grep("RT @", tweet$Tweet, invert=TRUE),]
+
+# Remove unicode and tidying
+hashtags <- tolower(gsub("[#]","", tweetRTremoved$hashtags))
+hashtags <- gsub("\\<U[^\\>]*\\>", "", hashtags)
+hashtags <- str_trim(unlist(strsplit(hashtags, ",")))
+hashtags <- as.data.frame(hashtags, stringsAsFactors = FALSE)
+hashtags <- na.omit(hashtags)
+
+hashtags <- hashtags %>%
+   count(hashtags, sort = TRUE) %>%
+   top_n(20) %>%
+   mutate(hashtags = reorder(hashtags, n)) 
+```
+</details>
+
+> Top 20 Hashtags Found in Tweets from Data Scientists
+
+```{r echo=FALSE}
+ggplot(hashtags, aes(x = hashtags, y = n)) +
+   geom_col(fill = "indianred2") +
+   xlab(NULL) +
+   coord_flip() +
+   labs(y = "Frequency",
+        x = "Hashtags")
+```
+
+***
+
+#### Prerequisite Skills
+##### How to Become a "Thought Teader" in Data Science?
+
+We now know what the hot topics are being discussed, however, Team SPARC got more curious. What can we determined from our extracted data about the skill sets and knowledge these data scientists possess which made them successful today? 
+
+This is where their LinkedIn profile aided us to answer this question. These influencers in the field have the ability to not only manipulate vast amounts of data with advanced statistical and visualization techniques but have an in-demand acumen from which they can derive excellent insights. By analyzing their listed skills on their profile, the **Top 10 Skills Data Scientists Possess** are shown below.
+
+<details>
+  <summary> *Code* </summary>
+```{r}
+# Tidying strings to list skills
+skills <- tolower(gsub("[|]", ",", linkedin$linkSkill))
+skills <- str_trim(unlist(strsplit(skills, ",")))
+skills <- as.data.frame(skills, stringsAsFactors = FALSE)
+skills <- skills %>%
+   count(skills, sort = TRUE) %>%
+   top_n(10) %>%
+   mutate(skills = reorder(skills, n)) 
+```
+</details>
+
+> Top 10 Data Science Skills to Possess
+
+```{r echo=FALSE}
+ggplot(skills, aes(x = skills, y = (100*(n/sum(n))))) +
+   geom_col(fill = "indianred2") +
+   xlab(NULL) +
+   coord_flip() +
+   labs(y = "Percentage",
+        x = "Skills")
+```
+
+As a result, *strategy* is the most referenced ability they are skilled in. Followed by knowledge of *enterprise software*, *R*, *digital transformation*, *leadership*, *business intelligence*, and more. It is important to note that these are technical and non-technical skills, both of which are important and complement each other to perform in an effective manner. The graph below further highlights and narrows these skills into the **Top 10 Areas of Expertise** that are directly linked to the discipline of industrial design.
+
+<details>
+  <summary> *Code* </summary>
+```{r}
+# Tidying strings to list Areas of Expertise
+expertise <- tolower(gsub("[|]", ",", dataurlA$AreasofExpertise))
+expertise <- str_trim(unlist(strsplit(expertise, ",")))
+expertise <- as.data.frame(expertise, stringsAsFactors = FALSE)
+expertise <- expertise %>%
+   count(expertise, sort = TRUE) %>%
+   top_n(11) %>%
+   mutate(expertise = reorder(expertise, n)) 
+expertise <- expertise[-1,]
+```
+</details>
+
+> Top 10 Areas of Expertise
+
+```{r echo=FALSE}
+ggplot(expertise, aes(x = expertise, y = n)) +
+   geom_col(fill = "indianred2") +
+   xlab(NULL) +
+   coord_flip() +
+   labs(y = "Frequency",
+        x = "Areas of Expertise")
+```
+
+Some of the notable areas are *AI-Artificial Intelligence*, *Big Data*, *Digital Transformation*, *Marketing*, *Interpersonal Skills*, *IOT-Internet of Things*, and *Cloud*.
+
+***
+#### You Too, a Future Leader
+##### How to Start Gaining such Skills and Experiences?
+
+With the innumerable amounts of data generated in these days, data scientists have become an increasingly needed vocation. There are many top companies that are hiring their own specialists in data. However, due to the novelty of this profession, many are not entirely aware of all the possible career fields that come with being a data scientist. Therefore, using data from LinkedIn, the following highlights the *Top 10 Industries* these leaders have professional experiences working in.
+
+<details>
+  <summary> *Code* </summary>
+```{r}
+# Tidying strings to list Industry
+Industry <- tolower(gsub("[|]", ",", dataurlA$IndustryExperience))
+Industry <- str_trim(unlist(strsplit(Industry, ",")))
+Industry <- as.data.frame(Industry, stringsAsFactors = FALSE)
+Industry <- na.omit(Industry)
+Industry <- Industry %>%
+   count(Industry, sort = TRUE) %>%
+   top_n(10) %>%
+   mutate(Industry = reorder(Industry, n)) 
+```
+</details>
+
+> Top 10 Industry of Experience
+
+```{r echo=FALSE}
+ggplot(Industry, aes(x = Industry, y = (100*(n/sum(n))))) +
+   geom_col(fill = "indianred2") +
+   xlab(NULL) +
+   coord_flip() +
+   labs(y = "Percentage",
+        x = "Industry Experience")
+```
+
+Many have professional experiences working in *financial services and banking, professional services, technology, telecommunications, healthcare*, etc. This shows that there are many companies who are trying to make sense of the vast amount of data available. 
+
+The pioneers have been around for a while but most of the scientists today have been on the job for only a few years. It's a good time to enter the field for those who want also successfully contribute to this fresh and exciting field. As stated by the United States of Labor Statistics, nearly 80% of data scientists report a shortage in their field and the projected growth over the next decade is at 11%, which is higher than the 7% estimated growth for all occupations.
+
+***
+### Conclusion
+
+In conclusion, we were able to build a table of more than **50 of today's data science influencers from around the world**. *Some of these sources of inspiration include Ronald van Loon, Tripp Braden, Angela Bassa, Jenny Bryan* and many more! These experts are actively keeping up with all **new developments** in :  
+
+* artificial intelligence, 
+* digital transformation, 
+* big data, 
+* analytical software, 
+* machine learning, and more. 
+
+Moreover, some of the **non-technical skills** that are greatly needed and valued include:  
+
+* excellent strategy,
+* communication,
+* research,  
+* leadership skills, and so on. 
+
+While some of the important **technical skills** are: 
+
+* data mining,
+* machine learning,
+* knowledge of enterprise software, 
+* digital transformation, and 
+* business intelligence, and more. 
+
+With a promising outlook for occupations in data science in the coming years, one can advance their career by seeking opportunities by in:
+
+* financial services and banking, 
+* professional services, 
+* technology, 
+* telecommunications, 
+* healthcare, etc and begin gaining valuable professional experiences. 
+
+Maybe one day if we execute this project again, we may find your name here amongst the list of the thought leaders in data science of the 21st century.
+
+***
+
+### Challenges & Solutions {.tabset .tabset-fade .tabset-pills}
+#### Source Identification
+* There was no single source of data which could supply all the required attributes.
+ + Each team member took up this task and came up with all the findings/sources and recorded in the Google Spreadsheet.
+* How can just one source be trusted?
+ + Identified the most commonly mentioned profiles amongst all the sources and discussed which one to select as the trusted source. 
+* What if we are given conflicting information from each selected site?
+ + Decided to exclude outlier information which was not proposed by majority sites.
+
+***
+#### Data Collection
+* Some of the sites were restricted for data access unless authenticated and some API's were restricted by the limited number of API calls. 
+ + To overcome, the team created accounts to access the data, and restricted the number of API calls and decided to use other member accounts if we hit a limit.
+
+***
+#### Storage & Retrieve
+* Only one of our team members was aware of MongoDB Atlas feature, and others were not unaware.
+ + A KT session was scheduled to explain the process of connecting to cloud and performing operations.
+ + Credentials were shared with team members with limited time access.  
+ 
+***
+#### Data Analysis
+* Some strings were encrypted in  Unicode and were not accounted for when conducting the analysis.
+ + Further reading was done on how to effectively remove Unicode using `stringr`.
+* Adding an interactive world map sometimes crashed R.
+ + Readings lead to a solution of a simple additional code was needed to prevent crashing when using `leaflet`.
+
+***
+### Works Cited
+
+* Analytics Vidhya Content Team. [*24 Ultimate Data Scientists To Follow in the World Today*](https://www.analyticsvidhya.com/blog/2015/09/ultimate-data-scientists-world-today/). Accessed on March 15, 2019.
+
+* Bureau of Labor Statistics. [*Computer and Information Research Scientists*](https://www.bls.gov/ooh/computer-and-information-technology/computer-and-information-research-scientists.htm). Accessed on March 21, 2019.
+
+* Ilangovan, Ramesh. [*15 Big Data, Analytics, and Data Science Influencers You Should Be Following*](https://hackernoon.com/15-big-data-analytics-and-data-science-influencers-you-should-be-following-2ad832bc1e5). Accessed on March 15, 2019.
+
+* Isaacs, Malcolm. [*10 influential data scientists and why you should follow them on Twitter*](https://techbeacon.com/enterprise-it/10-influential-data-scientists-why-you-should-follow-them-twitter). Accessed on March 15, 2019.
+
+* RStudio Package: [`leaflet`](https://rstudio.github.io/leaflet/)
+
+* RStudio Package: [`mongolite`](https://cran.r-project.org/web/packages/mongolite/index.html)
+
+* Thinker360. [*Top 20 Global Thought Leaders on Analytics (July 2018)*](https://www.thinkers360.com/top-20-global-thought-leaders-on-analytics-july-2018/). Accessed on March 15, 2019.

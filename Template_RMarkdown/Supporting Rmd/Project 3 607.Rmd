@@ -1,0 +1,300 @@
+---
+title: "Project 3 607"
+date: "March 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rjson)
+library(XML)
+library(xml2)
+library(ggplot2)
+library(dplyr)
+library(maps)
+library(ggmap)
+# install.packages("gridExtra")
+library(mongolite)
+library(lubridate)
+library(gridExtra)
+# Parsing of HTML/XML files  
+library(rvest)    
+# String manipulation
+library(stringr)   
+# Verbose regular expressions
+#install.packages("rebus")
+library(rebus)     
+# Eases DateTime manipulation
+library(lubridate)
+library(DT)
+#### Connect to MOngo
+mongoFile <- gridfs(db = "MSProject3", url = "mongodb+srv://msds_user:msds@cluster0-bqyhe.gcp.mongodb.net/", prefix = "fs",options = ssl_options())
+# mongoCollection = mongo(collection = "project3", db = "MSProject3", url = "mongodb+srv://msds_user:msds@cluster0-bqyhe.gcp.mongodb.net/") # create connection, database and collection
+# List All File from Mongo
+allfiles <- mongoFile$find()
+allfiles
+# Remove a file by id or Name
+mongoFile$download("tweet.csv")
+mongoFile$download("dataurlA.csv")
+mongoFile$download("linkedin.csv")
+mongoFile$download("ppl.html")
+```
+
+
+
+```{r}
+# htmltools::includeHTML("header.html")
+htmltools::includeHTML("ppl.html")
+```
+
+
+
+
+## Reading Data From Web
+
+URL: https://www.thinkers360.com/top-20-global-thought-leaders-on-analytics-july-2018/
+
+```{r eval=FALSE, include=TRUE}
+urlA <- read_html("https://www.thinkers360.com/top-20-global-thought-leaders-on-analytics-july-2018/")
+tbls_ls <- urlA %>%
+        html_nodes("table") %>%
+        .[1] %>%
+        html_table(fill = TRUE)
+tbls_ls[[1]]
+# Data
+# 1	@ewilson1776	Eric Wilson	Score: 100	
+# 2	@rautsan	Sandeep Raut	Score: 76.92	
+# 3	@charlesaraujo	Charles Araujo	Score: 62.31	
+# 4	@tkspeaks	Thomas Koulopoulos	Score: 61.54
+dataurlA <- as_tibble(tbls_ls[[1]])
+# https://www.thinkers360.com/tl/profiles/view/109
+# urlA %>%
+#         html_nodes("table td a") %>% html_attrs() %>% unlist()
+# 
+# urlA %>%
+#         html_nodes("table td ") %>% xml_children() %>% html_attr("href")
+# Profile URL 
+profileUrlA  <- urlA %>%
+        html_nodes("table tr td:nth-of-type(3) a") %>% html_attr("href")
+dataurlA$profileURL <- profileUrlA
+# Tweeturl
+urlA %>%
+        html_nodes("table tr td:nth-of-type(2) a") %>% html_attr("href")
+dataurlA
+# Rank Twitter Handle Name TL_Score    profileURL
+# 1	@ewilson1776	Eric Wilson	Score: 100	https://www.thinkers360.com/tl/profiles/view/126
+# 2	@rautsan	Sandeep Raut	Score: 76.92	https://www.thinkers360.com/tl/SandeepRaut
+# 3	@charlesaraujo	Charles Araujo	Score: 62.31	https://www.thinkers360.com/tl/profiles/view/107
+# 4	@tkspeaks	Thomas Koulopoulos	Score: 61.54	https://www.thinkers360.com/tl/profiles/view/109
+# 5		David Wegerle	Score: 60.77	https://www.thinkers360.com/tl/profiles/view/267
+# 6	@ihilgefort	Ingo Hilgefort	Score: 60.77	https://www.thinkers360.com/tl/profiles/view/92
+```
+
+### Read sub Profile Page
+
+Note Sys.sleep(10) , which was added to add 10 seconds wait before we start reading next record, it was to avoid throting of the request and resulting in being declined.
+
+```{r eval=FALSE, include=TRUE}
+dataurlA$profileIMGURL <- NA
+ dataurlA$intro <- NA
+ dataurlA$AreasofExpertise<- NA
+ dataurlA$location <- NA
+dataurlA$tFollower <- NA
+dataurlA$IndustryExperience <- NA
+dataurlA$company <- NA
+dataurlA$Publications <- NA
+dataurlA$Opportunities <- NA
+dataurlA$company <- NA
+dataurlA$socialURL <- NA
+for (i in 8:20){
+#--------------------------------------------------------------------------
+#-------------Read Sub Page -----------------------------------------------
+#--------------------------------------------------------------------------
+  # urlAprofile <- "https://www.thinkers360.com/tl/profiles/view/100"
+  urlAprofile <- dataurlA$profileURL[i]
+  Sys.sleep(10)
+  urlB <- read_html(urlAprofile)
+  dataurlA$intro[i] <- html_nodes(urlB,"div.profile_section p") %>% html_text() 
+  dataurlA$profileIMGURL[i] <-  html_nodes(urlB,'div.profile_bg img') %>% html_attr("src")
+  
+  
+      profileIMGURL <-      html_nodes(urlB,'div.profile_bg img') %>% html_attr("src")
+      intro <- html_nodes(urlB,"div.profile_section p") %>% html_text() 
+      areofExper <- "div.psection:nth-of-type(4) div.skill_section"
+      publication <- "div#publications.skill_section div.col-sm-12"
+      
+      blog <- "div#blog.skill_section div.pitem"
+blog <- html_nodes(urlB,blog) %>% html_text()
+blogT <- html_nodes(urlB,"div#blog.skill_section div.ppanel div div:nth-of-type(1)") %>% html_text() %>% unlist()
+blogTag <-  html_nodes(urlB,"div#blog.skill_section p:nth-of-type(2)") %>% html_text() %>% unlist()
+blogData <- 
+html_nodes(urlB,"div#blog.skill_section div.ppanel div div:nth-of-type(2)") %>% html_text() %>% unlist()
+# book <- "div.pitem:nth-of-type(3)"
+# bookTitle <- "div#publication2.ppanel div div:nth-of-type(1)"
+# bookTag <- "div#publication2.ppanel p:nth-of-type(2)"
+# bookdat <- "div#publication2.ppanel div div:nth-of-type(2)"
+# 
+# book <- html_nodes(urlB,"div#publications.skill_section div.pitem") %>% html_text()
+# bookTitle <- html_nodes(urlB,"div#publication3.ppanel div div:nth-of-type(1)") %>% html_text()
+# bookTag <- html_nodes(urlB,bookTag) %>% html_text()
+# bookdat <- html_nodes(urlB,bookdat) %>% html_text()
+Publications <-  html_nodes(urlB,"div#publications.skill_section div.pitem") %>% html_text()
+dataurlA$Publications[i] <- paste(Publications, collapse = " | ")
+# span.item
+AreasofExpertise <- html_nodes(urlB,"div.psection:nth-of-type(4) div.skill_section span.item") %>% html_text() %>% unlist() 
+dataurlA$AreasofExpertise[i] <- paste(str_extract(AreasofExpertise,"[[:alpha:]]+ ([[:alpha:]]+)?"),collapse = "|")
+# Followers
+tFollower <- 
+html_nodes(urlB,"div.profile_section div:nth-of-type(2)") %>% html_text()%>%trimws() %>% unlist() %>% str_extract("[0-9]+")
+dataurlA$tFollower[i] <-ifelse(length(tFollower)==0,NA,tFollower)
+dataurlA$location[i] <- html_nodes(urlB,"div.profile_section h3") %>% html_text()%>%trimws() %>% unlist()
+IndustryExperience <- "div.psection:nth-of-type(5) span.item"
+ IndustryExperience <- html_nodes(urlB,"div.psection:nth-of-type(5) span.item") %>% html_text()%>%trimws() %>% unlist()
+ dataurlA$IndustryExperience[i]  <- paste(IndustryExperience, collapse = " | ")
+ 
+ 
+ 
+ 
+ 
+  socialURL<- html_nodes(urlB,"div.pinfo_section:nth-of-type(2) a") %>% html_attr("href")
+  dataurlA$socialURL[i] <- paste(socialURL,collapse = " | ")
+  
+  
+  # Opportunities
+  
+   
+   dataurlA$Opportunities[i] <- ifelse(length(html_nodes(urlB,"div#opportunities.skill_section div.ppanel div div:nth-of-type(1)") %>% html_text()%>%trimws() %>% unlist())==0 ,NA,
+                                       html_nodes(urlB,"div#opportunities.skill_section div.ppanel div div:nth-of-type(1)") %>% html_text()%>%trimws() %>% unlist())
+ 
+ # COmpany 
+   
+  company <- html_nodes(urlB,"div.user-info") %>% html_text()%>%trimws() %>% unlist()
+   
+   dataurlA$company[i] <-   ifelse(length(company)==0,NA,company)
+}
+  dataurlA$tURL <- trimws(str_extract(dataurlA$socialURL," ?(https://twitter.com/)[\\w]+"))
+dataurlA$thandle <- str_replace(dataurlA$tURL,"https://twitter.com/","")
+  dataurlA$linkURL <- str_extract(dataurlA$socialURL," ?(https://www.linkedin.com/)[:alpha:]+/?[\\w]+-?[\\w]+")
+  
+#--------------------------------------------------------------------------
+#-------------Read Sub Page -----------------------------------------------
+#--------------------------------------------------------------------------
+```
+
+
+
+
+## Reading data from URL :"https://data606.net/course-overview/links/"
+
+```{r eval=FALSE, include=TRUE}
+dataurlAc <- dataurlA
+urlC <- "https://data606.net/course-overview/links/"
+ urlC <- read_html(urlC)
+  
+    html_nodes(urlC,'div.profile_bg img') %>% html_attr("src") 
+    
+    ## Read Nmae as data frame
+    Name  <-  html_nodes(urlC,"ul:nth-of-type(5) a.highlight, ul:nth-of-type(5) li:nth-of-type(n+3)") %>% html_text()  %>% unlist()
+    
+    nameDF <- as.data.frame(Name)
+    
+    ## Split it in Name and Tweeter handle
+     nameDF <- separate(nameDF,Name,c("Name","thandle"),sep="@")
+     
+    ## append result to above data set from from URLA 
+    
+ dataurlA <-  tibble::add_row(dataurlAc  ,Name = nameDF$Name,`Twitter Handle`=nameDF$thandle)
+ 
+ dataurlA$`Twitter Handle` <- str_replace_all( dataurlA$`Twitter Handle` ,"@","")
+ 
+ #---------------------------1st data ready------------------------------------------
+    datatable(dataurlA)
+### Writing it local folder and uploading it MONGO.
+write.csv(dataurlA,"dataurlA.csv")
+mongoFile$remove("dataurlA.csv")
+mongoFile$upload("dataurlA.csv")
+```
+
+
+## Reading Tweeter DATA 
+
+Get data from URL: "https://whatsq.com/gst/index.php?name=rautsan&key=Yes"
+
+```{r eval=FALSE, include=TRUE}
+length(dataurlA$`Twitter Handle`)
+rm(dtf)
+dtf <- data.frame(data=character(),
+                 TName=character(),
+                 Tweet=character(),
+                 DateTime=character(),
+                 Month=character(),
+                 weekDay=character(),
+                 year=character(),
+                 day =character(),
+                 hash = character(),
+                 img = character()
+                 )
+ # url2 <- "https://whatsq.com/gst/index.php?name=rautsan&key=Yes"
+for ( i in 1: length(dataurlA$`Twitter Handle`)) {
+   url2 <- paste0("https://whatsq.com/gst/index.php?name=",dataurlA$`Twitter Handle`[i],"&key=Yes")
+   print(url2)
+   Sys.sleep(10)
+   tdata <- read_html(url2,options = "HUGE")
+# write_html(tdata,"ra.html")
+html_nodes(tdata,".tweet-text")  %>%  html_text()  %>%  str_trim() %>%    unlist() 
+td<- html_nodes(tdata,".tweet-text")  %>%  html_text()  %>%  str_trim() %>%    unlist() 
+td<- tibble(data= td)
+# Tweeter id:
+# tid  <- str_extract(td[1],"@[[a-zA-Z]]+")
+ td$DateTime<- str_extract(td$data,"@[\\w]+ [A-Z]{1}[a-z]{1}[a-z]{1} \\d{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+][0]{4} [0-9]{4}")
+   # td$Tweets <- str_split(td$data,"@[[a-zA-Z]]+ [A-Z]{1}[a-z]{1}[a-z]{1} \\d{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+][0]{4} [0-9]{4}")
+ 
+ 
+ 
+ td<- separate(td,data,c("TName","Tweet"),"@[\\w]+ [A-Z]{1}[a-z]{1}[a-z]{1} \\d{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+][0]{4} [0-9]{4}",remove = FALSE)
+ 
+ td$Month <- trimws(str_extract(td$DateTime," [A-Z]{1}[a-z]{1}[a-z]{1}"))
+ td$weekDay <- str_extract(td$DateTime,"[A-Z]{1}[a-z]{1}[a-z]{1}")
+ td$year <- str_extract(td$DateTime,"[0-9]{4}$")
+ td$day <- str_extract(td$DateTime,"(?<= [A-Z]{1}[a-z]{1}[a-z]{1}) [0-9]{2}")
+ #td$hash <- str_extract_all(td$Tweet,"#[0-9a-zA-X]+")
+ # paste(unlist(str_extract_all(td$Tweet,"#[0-9a-zA-X]+")), collapse = ",")
+View(tmp)
+# td$hash <- mutate(td, hash =  str_extract_all(td$Tweet,"#[0-9a-zA-X]+") )
+td <- mutate(td, hash = unlist(lapply(str_extract_all(td$Tweet,"#\\S+"), function(X){paste(unlist(X), collapse = ", ")})))
+ 
+td$img <- html_nodes(tdata,'div.col-lg-4 img.img-thumbnail') %>% html_attr("src")
+dtf <- rbind(dtf,td)
+}
+#-----------------------------------------------------SAVE TWEETER DATA to Local and Mongo
+write.csv(dtf,"tweet.csv")
+mongoFile$remove("tweet.csv")
+mongoFile$upload("tweet.csv")
+```
+
+
+
+## Linkedin Data Read
+
+HTML was exctracted from Chrome using webscrapper and then data was extracted using R.
+
+```{r eval=FALSE, include=TRUE}
+## Update read linineid data 18 March
+DataLink <- read_csv("link182.csv")
+location <- NA
+linkSkill <- NA
+linkInterests <- NA
+for ( i in  1: length(DataLink$fullData)){
+  
+dataLink <- htmlParse(DataLink$fullData[i] )
+dataLink <- read_html(DataLink$fullData[i])
+location[i] <- html_nodes(dataLink, "h3.pv-top-card-section__location") %>% html_text() %>% str_trim() %>%    unlist() 
+linkSkill[i] <- html_nodes(dataLink,"span.pv-skill-category-entity__name-text")  %>%  html_text()  %>%  str_trim() %>%    unlist() %>% paste(collapse = " | ")
+linkInterests[i] <- html_nodes(dataLink,"span.pv-entity__summary-title-text")  %>%  html_text()  %>%  str_trim() %>%    unlist() %>% paste(collapse = " | ")
+}
+linkedinData <- tibble(DataLink$Name,DataLink$`web-scraper-start-url`,DataLink$Location,DataLink$Intro,linkSkill,linkInterests)
+#-------------------------------------SAVE Data to local directory and upload to MONGO
+write.csv(linkedinData,"linkedin.csv")
+mongoFile$upload("linkedin.csv")
+```

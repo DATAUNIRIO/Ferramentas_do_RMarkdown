@@ -1,0 +1,219 @@
+---
+title: "Project 3 607"
+author: "Rajwant Mishra"
+date: "March 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rjson)
+library(XML)
+library(xml2)
+library(ggplot2)
+library(dplyr)
+library(maps)
+library(ggmap)
+# install.packages("gridExtra")
+library(mongolite)
+library(lubridate)
+library(gridExtra)
+# Parsing of HTML/XML files  
+library(rvest)    
+# String manipulation
+library(stringr)   
+# Verbose regular expressions
+#install.packages("rebus")
+library(rebus)     
+# Eases DateTime manipulation
+library(lubridate)
+library(DT)
+#### Connect to MOngo
+mongoFile <- gridfs(db = "MSProject3", url = "mongodb+srv://msds_user:msds@cluster0-bqyhe.gcp.mongodb.net/", prefix = "fs",options = ssl_options(weak_cert_validation = TRUE))
+mongoCollection = mongo(collection = "project3", db = "MSProject3", url = "mongodb+srv://msds_user:msds@cluster0-bqyhe.gcp.mongodb.net/",options = ssl_options(weak_cert_validation = TRUE)) 
+# create connection, database and collection
+# List All File from Mongo
+allfiles <- mongoFile$find()
+allfiles
+# Remove a file by id or Name
+
+mongoFile$download("ppl.html")
+```
+
+
+```{r}
+mongoFile$download("tweet.csv")
+mongoFile$download("dataurlA.csv")
+mongoFile$download("linkedin.csv")
+# htmltools::includeHTML("header.html")
+htmltools::includeHTML("ppl.html")
+```
+
+
+
+## DataBase
+
+Process
+
+In Mysql
+
+1) create database MSProject3
+2) set it as default schema
+3) import tables from the local file via Table Data Import Wizard
+
+In R
+
+1) Connect the Mysql database using dbConnect
+2) a) Case 1: if table exists, drop it
+   b) Case 2: Else create a new table
+
+3) Specify the column names and their definition
+4) Write Query to update the tables
+5) Close Connection
+
+
+
+
+
+```{r}
+
+CheckDB <- function() {
+  
+#--------------- Open Connection 
+  
+  con2 <- dbConnect(RMySQL::MySQL(), dbname = "MSProject3", host="localhost", user="root",password= "Sparc@DATA_607")
+
+#--------------- Drop Table if Exists 
+  
+  
+if(dbExistsTable(con2, "dataurla")){
+    dbRemoveTable(con2,"dataurla")
+  
+  }
+ 
+  if(dbExistsTable(con2, "tweet")){
+    dbRemoveTable(con2,"tweet")
+  
+  }
+  
+#-------------- Create first table for dataurla
+  
+  
+query <- "CREATE TABLE `dataurla` (  
+`profile_id`  INT AUTO_INCREMENT,
+`Rank` INT NOT NULL AUTO_INCREMENT,
+`Twitter Handle` VARCHAR(45) NULL,
+`Name` VARCHAR(45) NULL, 
+`TL Score` VARCHAR(45) NULL, 
+`profileURL` VARCHAR(45) NULL,
+`profileIMGURL` VARCHAR(45) NULL,
+`areofExpert` VARCHAR(45) NULL,
+`AreasofExpertise` VARCHAR(45) NULL,
+`company` VARCHAR(45) NULL,
+`intro` VARCHAR(45) NULL,
+`location` VARCHAR(45) NULL,
+`tFollower` VARCHAR(45) NULL,
+`IndustryExperience` VARCHAR(45) NULL,
+`Publications` VARCHAR(45) NULL,
+`Opportunities` VARCHAR(45) NULL,
+`socialURL` VARCHAR(45) NULL,
+`tURL` VARCHAR(45) NULL,
+`linkURL` VARCHAR(45) NULL,
+`thandle` VARCHAR(45) NULL,
+ PRIMARY KEY (`Rank`))"
+
+
+
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+
+#--------------- Create second table for tweet
+
+
+query <- "CREATE TABLE `tweet` 
+(`profile_id`  INT AUTO_INCREMENT,
+`data` VARCHAR(45) NULL,
+`Tweet` VARCHAR(45) NULL,
+`DateTime` VARCHAR(45) NULL,  
+`weekDay` INT NULL,  
+`year` VARCHAR(45) NULL,  
+`day` VARCHAR(1000) NULL,
+`hash` VARCHAR(1000) NULL,
+`img` VARCHAR(1000) NULL,
+ `PRIMARY KEY (`profile_id`),  
+ FOREIGN KEY (`profile_id`)    
+ `REFERENCES `MSProject3`.`dataurla` (`Rank`)    
+ `ON DELETE NO ACTION     ON UPDATE CASCADE)"
+
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+
+#--------------- Close Connection
+
+
+dbDisconnect(con2)
+
+}
+
+#--------------- Update tables
+
+
+updateDB <- function(twitterhandle, name, tlscore, profileurl, profileimgurl, areofexpert, areasofexpertise, company, intro, location, tFollower, industryexperience, publications, opportunities, socialurl, turl, linkurl, thandle,Data, tname, tweet, datetime, month, weekday, year, day, hash, img){
+
+  con2 <- dbConnect(RMySQL::MySQL(), dbname = "MSProject3", host="localhost", user="root",password= "Sparc@DATA_607")
+  
+ 
+#--------------- Update dataurla table 
+  
+  
+query <- sprintf("insert into dataurla (Twitter Handle, Name, TL Score, profileURL, profileIMGURL, areofExpert, AreasofExpertise, company, intro, location, tFollower, IndustryExperience, Publications, Opportunities, socialURL, tURL, linkURL, thandle) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",twitterhandle, name, tlscore, profileurl, profileimgurl, areofexpert, areasofexpertise, company, intro, location, tFollower, industryexperience, publications, opportunities, socialurl, turl, linkurl, thandle)
+  print (query)
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+
+#--------------- Get 'Rank' to update dataurla table
+
+
+query <- sprintf("select  Rank from dataurla  where Twitter Handle='%s', Name='%s', TL Score='%s', profileURL='%s', profileIMGURL='%s', areofExpert='%s', AreasofExpertise='%s', company='%s', intro='%s', location='%s', tFollower='%s', IndustryExperience='%s', Publications='%s', Opportunities='%s', socialURL='%s', tURL='%s', linkURL='%s', thandle='%s' limit 1",twitterhandle, name, tlscore, profileurl, profileimgurl, areofexpert, areasofexpertise, company, intro, location, tFollower, industryexperience, publications, opportunities, socialurl, turl, linkurl, thandle)
+  
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+data_Rank <- tab1data$Rank
+
+
+#---------------- Update tweet table
+
+
+query<-  sprintf("insert into tweet (data, TName, Tweet, DateTime, Month, weekDay, year, day, hash, img) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",Data, tname, tweet, datetime, month, weekday, year, day, hash, img )
+print(query)
+tab1 <- dbSendQuery(con2,query)
+ 
+tab1data <- dbFetch(tab1)
+
+#---------------- Get 'profile_id' to update tweet table
+
+
+query <- sprintf("select  profile_id from tweet  where Tdata='%s', TName='%s', Tweet='%s', DateTime='%s', Month='%s', weekDay='%s', year='%s', day='%s', hash='%s', img='%s' limit 1",Data, tname, tweet, datetime, month, weekday, year, day, hash, img )
+  
+tab1 <- dbSendQuery(con2,query)
+tab1data <- dbFetch(tab1)
+data_profileid <- tab1data$profile_id
+
+#---------------- Close Connection
+
+
+dbDisconnect(con2)
+
+
+
+}
+
+
+
+
+```
+
+
+
+
+
