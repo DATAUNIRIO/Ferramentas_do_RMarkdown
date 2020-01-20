@@ -1,0 +1,307 @@
+---
+title: "Fernando Pessoa no RMarkdown"
+author:
+- Steven Dutt-Ross
+output: 
+  encryptedRmd::encrypted_html_document:
+    theme: cerulean
+    highlight: tango
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+<style>
+body {
+    background-color: #f7f5de;
+}
+</style>
+<!--
+<style>
+body {
+    background-color: #ceefee;
+}
+</style>
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Fernando Pessoa
+## Poema em linha reta
+
+Nunca conheci quem tivesse levado porrada.
+Todos os meus conhecidos têm sido campeões em tudo.
+
+E eu, tantas vezes reles, tantas vezes porco, tantas vezes vil,
+Eu tantas vezes irrespondivelmente parasita,
+Indesculpavelmente sujo,
+Eu, que tantas vezes não tenho tido paciência para tomar banho,
+Eu, que tantas vezes tenho sido ridículo, absurdo,
+Que tenho enrolado os pés publicamente nos tapetes das
+etiquetas,
+Que tenho sido grotesco, mesquinho, submisso e arrogante,
+Que tenho sofrido enxovalhos e calado,
+Que quando não tenho calado, tenho sido mais ridículo ainda;
+Eu, que tenho sido cômico às criadas de hotel,
+Eu, que tenho sentido o piscar de olhos dos moços de fretes,
+Eu, que tenho feito vergonhas financeiras, pedido emprestado sem pagar,
+Eu, que, quando a hora do soco surgiu, me tenho agachado
+Para fora da possibilidade do soco;
+Eu, que tenho sofrido a angústia das pequenas coisas ridículas,
+Eu verifico que não tenho par nisto tudo neste mundo.
+
+Toda a gente que eu conheço e que fala comigo
+Nunca teve um ato ridículo, nunca sofreu enxovalho,
+Nunca foi senão príncipe - todos eles príncipes - na vida...
+
+Quem me dera ouvir de alguém a voz humana
+Que confessasse não um pecado, mas uma infâmia;
+Que contasse, não uma violência, mas uma cobardia!
+Não, são todos o Ideal, se os oiço e me falam.
+Quem há neste largo mundo que me confesse que uma vez foi vil?
+Ó príncipes, meus irmãos,
+
+**Arre, estou farto de semideuses!
+Onde é que há gente no mundo?**
+
+Então sou só eu que é vil e errôneo nesta terra?
+
+Poderão as mulheres não os terem amado,
+Podem ter sido traídos - mas ridículos nunca!
+E eu, que tenho sido ridículo sem ter sido traído,
+Como posso eu falar com os meus superiores sem titubear?
+Eu, que venho sido vil, literalmente vil,
+Vil no sentido mesquinho e infame da vileza.
+
+<br>
+
+
+## Lisbon Revisited (1923)
+
+NÃO: Não quero nada.
+Já disse que não quero nada.
+
+Não me venham com conclusões!
+A única conclusão é morrer.
+
+Não me tragam estéticas!
+Não me falem em moral!
+
+Tirem-me daqui a metafísica!
+Não me apregoem sistemas completos, não me enfileirem conquistas
+Das ciências (das ciências, Deus meu, das ciências!) —
+Das ciências, das artes, da civilização moderna!
+
+**Que mal fiz eu aos deuses todos?**
+
+Se têm a verdade, guardem-na!
+
+Sou um técnico, mas tenho técnica só dentro da técnica.
+Fora disso sou doido, com todo o direito a sê-lo.
+Com todo o direito a sê-lo, ouviram?
+
+Não me macem, por amor de Deus!
+
+**Queriam-me casado, fútil, quotidiano e tributável?**
+Queriam-me o contrário disto, o contrário de qualquer coisa?
+Se eu fosse outra pessoa, fazia-lhes, a todos, a vontade.
+Assim, como sou, tenham paciência!
+Vão para o diabo sem mim,
+Ou deixem-me ir sozinho para o diabo!
+Para que havemos de ir juntos?
+
+Não me peguem no braço!
+Não gosto que me peguem no braço. Quero ser sozinho.
+Já disse que sou sozinho!
+Ah, que maçada quererem que eu seja da companhia!
+
+Ó céu azul — o mesmo da minha infância —
+Eterna verdade vazia e perfeita!
+Ó macio Tejo ancestral e mudo,
+Pequena verdade onde o céu se reflete!
+Ó mágoa revisitada, Lisboa de outrora de hoje!
+Nada me dais, nada me tirais, nada sois que eu me sinta.
+
+Deixem-me em paz! Não tardo, que eu nunca tardo...
+E enquanto tarda o Abismo e o Silêncio quero estar sozinho! 
+
+<!--
+![](https://media.giphy.com/media/jZtEA0nyCrVxm/giphy.gif)
+
+
+
+##### Esher
+![](https://media.giphy.com/media/KhD7MU5Kt7F16/giphy.gif)
+-->
+
+# RMarkdown
+
+## Para fazer tópicos/bullets.
+> "Se nos ferem, não sangramos?"
+
+1. Hamlet,
+2. MacBeth,
+3. Otelo,
+4. O Mercador de Veneza,
+5. Romeu & Julieta.
+
+# "Winter Is Coming"
+## "Winter Is Coming"
+### "Winter Is Coming"
+#### "Winter Is Coming"
+##### "Winter Is Coming"
+###### "Winter Is Coming"
+
+## Colocando hiperlink
+Esse é o [site do GAE](http://gae.uniriotec.br/)
+
+## Como colocar imagem local?
+Basta adicionar o comando:
+```
+![](C:/enderenco/da/sua/imagem.png)
+```
+ou o comando:
+
+```
+![](https://www.r-project.org/Rlogo.png)
+
+```
+
+## Aparência e Estilo
+
+**Bootstrap**: temas válidos "default", "cerulean", "journal", "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
+"simplex", and "yeti".  
+
+**Highlight style**: estilos possíveis "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", "haddock", and "textmate". 
+
+Exemplo 1:
+```
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango
+```
+Exemplo 2:
+```
+output:
+  pdf_document:
+  toc: true
+  highlight: zenburn
+  always_allow_html: yes
+  word_document:
+  fig_width: 5
+  fig_height: 5
+  fig_caption: true
+  always_allow_html: yes
+  html_document:
+  theme: cerulean
+  highlight: tango
+  toc: true
+  toc_float: true
+  code_folding: hide
+```
+
+
+## Programando em R dentro do Markdown
+### Gráficos
+#### Diagrama de Dispersão
+
+```{r cars, echo=TRUE}
+#```{r cars, echo=FALSE}
+#```{r cars, results='hide'}
+#```{r cars, warning=FALSE}
+#```{r cars, menssage=FALSE}
+plot(cars$speed, cars$dist)
+plot(cars$speed, cars$dist, col="#0d6887",pch=19,main="Diagrama de Dispersão", xlab="Velocidade", ylab ="o que é disp?" )
+abline(lsfit(cars$speed, cars$dist),col="#032435", lty=2, lwd=4)
+```
+
+## Cadê o banco de dados
+```{r}
+data(mtcars)
+library(DT)
+datatable(mtcars)
+```
+
+
+## Matriz de Correlação
+```{r correlacao, echo=TRUE}
+cor(mtcars[,c("disp","drat","hp","mpg","qsec","wt")])
+```
+
+Mas que coisa sem graça!
+```{r correlacao2, echo=TRUE}
+library(corrplot)
+M <- cor(mtcars[,c("disp","drat","hp","mpg","qsec","wt")])
+corrplot(M, method="circle")
+```
+
+
+## Nuvem de palavras
+
+Como criar a minha nuvem de palavras?
+
+```{r wordcloud, echo=TRUE}
+library(wordcloud2)
+wordcloud2(data = demoFreq)
+```
+
+
+## LaTeX
+
+Temos duas formas de **colocar equações do LaTeX no RMarkdown**
+A primeira....
+
+```
+$$r =\frac{COV(x,y)}{S_xS_y} $$
+
+A segunda...
+
+Que tal colocar a **função de densidade da Normal**?
+
+<!--Colocar a formula no quadro antes-->
+
+\begin{equation}
+f(x) = \frac{1}{2\pi\sigma^{2}} e^{-\frac{1}{2 \sigma^{2}} (x - \mu)^{2}}
+\end{equation}
+
+## Um modelo de regressão
+
+```{r regressao, echo=TRUE}
+data(mtcars)
+modelo1<-lm(mpg~hp, data=mtcars)
+modelo1
+```
+
+A estimativa do $\beta_1$ desse modelo linear simples é
+`r coef(modelo1)[2]`.
+
+### E se fosse uma apresentação? como devemos fazer?
+<br>
+Existem diversas forams de apresentações no Rmarkdown. As mais utilizadas são:<br>
+a. ioslides_presentation<br>
+b. slidy_presentation<br>
+c. beamer_presentation<br>
+d. slidify <br>
+e. sharigan <br>
+f. reveals.js <br>
+g. Rpresentation
+
+Exemplos:
+```
+output: ioslides_presentation
+output: slidy_presentation
+```
+
+## Usando CSS
+
+```
+<style>
+body {
+    background-color: #f7f5de;
+}
+</style>
+```
