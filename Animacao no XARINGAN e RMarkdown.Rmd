@@ -1,0 +1,21 @@
+---
+title: "Presentation Ninja: Funciona no SHINY e Rmarkdown"
+subtitle: "with xaringan"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+---
+
+```{r, echo = FALSE}
+aniview::use_aniview()
+```
+
+# A normal slide
+
+todas as animações estão aqui
+https://daneden.github.io/animate.css/
+
+---
+class: animated, bounceInDown
+
+# An animated slide
