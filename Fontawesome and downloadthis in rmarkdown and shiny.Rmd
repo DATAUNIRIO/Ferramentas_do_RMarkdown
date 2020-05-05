@@ -1,0 +1,96 @@
+---
+title: "Fontawesome and downloadthis in rmarkdown and shiny"
+author: "Steven"
+date: "26/04/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#devtools::install_github("rstudio/fontawesome")
+```
+
+
+
+```{r}
+# https://github.com/fmmattioni/downloadthis
+
+library(downloadthis)
+
+mtcars %>% 
+  download_this(
+    output_name = "mtcars data set",
+    output_extension = ".csv",
+    button_label = "Download data",
+    button_type = "warning",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+
+
+vector_example <- 1:10
+linear_model <- lm(mpg ~ gear, data = mtcars)
+
+list(mtcars, iris, vector_example, linear_model) %>%
+  download_this(
+    output_name = "datasets, vector, and linear model",
+    output_extension = ".rds",
+    button_label = "Download as rds",
+    button_type = "success",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+
+```
+
+
+```{r}
+
+Customizing buttons with css
+library(downloadthis)
+
+mtcars %>%
+  download_this(
+    output_name = "mtcars dataset",
+    output_extension = ".csv",
+    button_label = "Download data as csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save",
+    class = "button_large"
+  )
+
+Changing font-family
+Show css code
+
+library(downloadthis)
+
+mtcars %>%
+  download_this(
+    output_name = "mtcars dataset",
+    output_extension = ".csv",
+    button_label = "Download data as csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save",
+    class = "button_times_new_roman"
+  )
+
+Adding animation on hover
+Show css code
+
+library(downloadthis)
+
+mtcars %>%
+  download_this(
+    output_name = "mtcars dataset",
+    output_extension = ".csv",
+    button_label = "Download data as csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save",
+    class = "hvr-sweep-to-left"
+  )
+```
+

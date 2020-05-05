@@ -1,0 +1,18 @@
+TABELAS EM HTML
+lista de pacotes com tabelas em HTML para RMarkdown
+https://github.com/rstudio/gt
+While gt is trying to do something different with its own interface, it may not suit your specific needs. Here is a listing of leading table-making R packages, with links to their respective project pages:
+knitr (GITHUB, WEBSITE) — 
+kableExtra (GITHUB, WEBSITE) — 
+formattable (GITHUB, WEBSITE) — 
+DT (GITHUB, WEBSITE) — 
+pander (GITHUB, WEBSITE) — 
+huxtable (GITHUB, WEBSITE) — 
+reactable (GITHUB, WEBSITE) — 
+flextable (GITHUB, WEBSITE) — 
+pixiedust (GITHUB) — 
+tangram (GITHUB) — 
+ztable (GITHUB) — 
+condformat (GITHUB) — 
+stargazer (CRAN) — 
+xtable (CRAN)
