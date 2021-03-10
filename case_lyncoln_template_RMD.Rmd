@@ -1,0 +1,1309 @@
+---
+title: "Case mutual"
+author: "Lyncoln Sousa de Oliveira"
+date: "10/02/2021"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+---
+
+
+
+```{r setup, warning=FALSE, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+## Objetivo 
+Desenvolver modelo de credit scoring com intuito de diminuir o nível de mau pagadores na base de clientes da mutual. 
+
+## Tratamento da base
+
+
+Para manipulação de dados irá ser utilizado a biblioteca `dplyr`, e para visualização será utilizado o `ggplot2`.
+
+
+```{r message = FALSE}
+library(dplyr); library(ggplot2)
+```
+
+
+Leitura e tratamento da base
+
+
+```{r message=FALSE}
+base = readr::read_csv('../data/MutualClients.csv')
+```
+
+A base inicialmente conta com 40000 observações e 29 variáveis.
+
+
+<details>
+  <summary>Exibir Dicionário das variáveis</summary>
+  
+```{r echo=FALSE, message = FALSE}
+Coluna = c(
+  "clientId",
+  "shopId",
+  "gender",
+  "maritalStatus",
+  "age",
+  "numberOfDependents",
+  "education",
+  "flagResidencialPhone",
+  "areaCodeResidencialPhone",
+  "bestPaymentDay",
+  "shopRank",
+  "residenceType",
+  "monthsInResidence",
+  "flagMothersName",
+  "flagFathersName",
+  "flagResidenceTown_WorkingTown",
+  "flagResidenceState_WorkingState",
+  "monthsInTheJob",
+  "professionCode",
+  "mateIncome",
+  "flagResidencialAddress_PostalAddress",
+  "flagOtherCard",
+  "quantityBankingAccounts",
+  "flagMobilePhone",
+  "flagContactPhone",
+  "personalNetIncome",
+  "codeApplicationBooth",
+  "BAD"
+)
+
+Significado = c(
+  "Key para o tomador",
+  "Key do empréstimo",
+  "Gênero do tomador",
+  "Estado civil do tomador",
+  "Idade do tomador",
+  "Quantidade de dependentes do tomador",
+  "Nível educacional do tomador",
+  "Flag se o tomador possui telefone residencial ou não",
+  "Codigo de area do telefone residencial",
+  "Melhor dia para pagamento do empréstimo",
+  "Ranking do empréstimo",
+  "Tipo de residência",
+  "Tempo vivendo na mesma residência",
+  "Tomador registrou o nome da mãe na requisição de empréstimo",
+  "Tomador registrou o nome do pai na requisição de empréstimo",
+  "Flag se o tomador vive na mesma cidade em que trabalha",
+  "Flag se o tomador vive no mesmo estado que trabalha",
+  "Tempo no emprego atual",
+  "Código de profissão do tomador",
+  "Renda do cônjuge do tomador",
+  "Flag de validação do CEP do tomador",
+  "Se o tomador possui outros cartão de créditoIf the applicant possesses another credit or private label card",
+  "Quantidade de contas bancárias do tomador",
+  "Flag se o tomador possui telefone celular",
+  "Flag se o tomador possui um telefone de contato",
+  "Renda média líquida mensal do tomador",
+  "Código de onde a solicitação de empréstimo veio",
+  "Flag se o tomador veio atrasou o pagamento do empréstimo"
+)
+
+knitr::kable(tibble::tibble(Variável = sprintf("**%s**", Coluna), Significado))
+```
+</details>
+
+
+
+
+
+
+
+
+
+
+
+Observa-se que as variáveis quantitativas `quantityBankingAccounts`, `codeApplicationBooth` e `numberOfDependents` não apresentam variações, então serão removidas da análise.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+knitr::kable(tibble(
+  Variável = c(
+    "quantityBankingAccounts",
+    "codeApplicationBooth",
+    "numberOfDependents"
+  ),
+  Variação = c(
+    var(base$quantityBankingAccounts),
+    var(base$codeApplicationBooth),
+    var(base$numberOfDependents)
+  )
+))
+```
+</details>
+
+```{r echo=FALSE}
+knitr::kable(tibble(
+  Variável = c(
+    "quantityBankingAccounts",
+    "codeApplicationBooth",
+    "numberOfDependents"
+  ),
+  Variação = c(
+    var(base$quantityBankingAccounts),
+    var(base$codeApplicationBooth),
+    var(base$numberOfDependents)
+  )
+))
+```
+
+As variáveis qualitativas `flagMobilePhone`, `flagContactPhone` e `flagOtherCard` apresentam somente a resposta "N", logo também serão removidas.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+knitr::kable(tibble(
+  `Variável` = c("flagMobilePhone",
+               "flagContactPhone",
+               "flagOtherCard"),
+  `Proporção de respostas N` = c(
+    prop.table(table(base$flagMobilePhone))[[1]],
+    prop.table(table(base$flagContactPhone))[[1]],
+    prop.table(table(base$flagOtherCard))[[1]]
+  )
+))
+```
+</details>
+
+```{r echo=FALSE}
+knitr::kable(tibble(
+  `Variável` = c("flagMobilePhone",
+               "flagContactPhone",
+               "flagOtherCard"),
+  `Proporção de respostas N` = c(
+    prop.table(table(base$flagMobilePhone))[[1]],
+    prop.table(table(base$flagContactPhone))[[1]],
+    prop.table(table(base$flagOtherCard))[[1]]
+  )
+))
+```
+
+
+
+De acordo com o dicionário, as variáveis `X1`, `clientId`, `shopId` são identificadores e a variável `education` não apresenta informação em nenhuma das linhas da base por isso serão removidas. 
+
+A próxima tabela mostra a quantidade de observações "NA" por variável.
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+lapply(base, function(x){sum(is.na(x))}) %>%
+  as_tibble() %>%
+  knitr::kable() %>% 
+  kableExtra::scroll_box(width = "100%")
+                      
+```
+</details>
+
+
+```{r echo=FALSE}
+lapply(base, function(x){sum(is.na(x))}) %>%
+  as_tibble() %>%
+  knitr::kable() %>% 
+  kableExtra::scroll_box(width = "100%")
+                      
+```
+
+
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base = base %>%
+  select(
+    -c(
+      quantityBankingAccounts,
+      codeApplicationBooth,
+      numberOfDependents,
+      flagMobilePhone,
+      flagContactPhone,
+      flagOtherCard,
+      education,
+      X1,
+      clientId,
+      shopId
+    )
+  )
+```
+</details>
+
+
+```{r echo=FALSE}
+base = base %>%
+  select(
+    -c(
+      quantityBankingAccounts,
+      codeApplicationBooth,
+      numberOfDependents,
+      flagMobilePhone,
+      flagContactPhone,
+      flagOtherCard,
+      education,
+      X1,
+      clientId,
+      shopId
+    )
+  )
+```
+
+
+Além disso, as variáveis `professionCode`, `shopRank` e `areaCodeResidencialPhone` são representadas por números inteiros, porém possuem significados qualitativos. Serão convertidos as variáveis qualitavias para fatores.
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base = base %>%
+  mutate_if(is.character, factor) %>%
+  mutate(
+    professionCode = factor(professionCode),
+    shopRank = factor(shopRank),
+    areaCodeResidencialPhone = factor(areaCodeResidencialPhone)
+  )
+```
+</details>
+
+```{r echo=FALSE}
+base = base %>%
+  mutate_if(is.character, factor) %>%
+  mutate(
+    professionCode = factor(professionCode),
+    shopRank = factor(shopRank),
+    areaCodeResidencialPhone = factor(areaCodeResidencialPhone)
+  )
+```
+
+
+
+Após a limpeza da base dados, foi verificado que existem apenas 3 informações com dados faltantes. Como esse número é pequeno, iremos excluí-las da análise para evitar problemas na modelagem.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+knitr::kable(tibble(
+  `Linhas base Geral` = nrow(base),
+  `Linhas base sem NA` = nrow(na.omit(base))
+))
+
+base = na.omit(base)
+```
+</details>
+
+
+```{r echo=FALSE}
+knitr::kable(tibble(
+  `Linhas base Geral` = nrow(base),
+  `Linhas base sem NA` = nrow(na.omit(base))
+))
+
+base = na.omit(base)
+```
+
+
+Observando as variáveis `monthsInTheJob` e `monthsInResidence` foi verificado a existência de indivíduos com anos de vida menores do que anos trabalhos ou anos na mesma residência. Para corrigir isso foram removidas essas observações.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+numeroLinhaAntes = nrow(base)
+
+base = base %>%
+  mutate(olderThanMonthsInJob = monthsInTheJob / 12 < age) %>%
+  mutate(olderThanMonthsInResidence = monthsInResidence / 12 <= age)
+
+base = base %>%
+  filter(olderThanMonthsInJob,
+         olderThanMonthsInResidence) %>%
+  select(-c(olderThanMonthsInJob,
+            olderThanMonthsInResidence))
+
+numeroLinhaDepois = nrow(base)
+
+knitr::kable(
+  tibble(
+    `Linhas antes correção` = numeroLinhaAntes,
+    `Linhas após correção` = numeroLinhaDepois
+  )
+)
+```
+</details>
+
+```{r echo=FALSE}
+numeroLinhaAntes = nrow(base)
+
+base = base %>%
+  mutate(olderThanMonthsInJob = monthsInTheJob / 12 < age) %>%
+  mutate(olderThanMonthsInResidence = monthsInResidence / 12 <= age)
+
+base = base %>%
+  filter(olderThanMonthsInJob,
+         olderThanMonthsInResidence) %>%
+  select(-c(olderThanMonthsInJob,
+            olderThanMonthsInResidence))
+
+numeroLinhaDepois = nrow(base)
+
+knitr::kable(
+  tibble(
+    `Linhas antes correção` = numeroLinhaAntes,
+    `Linhas após correção` = numeroLinhaDepois
+  )
+)
+```
+
+
+A tabela abaixo ilustra algumas medidas descritivas das variáveis quantitativas da base de dados tratada.
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+numericosTabela = base %>%
+  select_if(is.numeric) %>%
+  .[, -7]
+
+tabela = do.call(cbind, lapply(numericosTabela,function(x) {
+                                   if (sum(x) > 30000000)
+                                     summary(x, digits = 8)
+                                   else
+                                     summary(x, digits = 3)
+                                 })) %>%
+  as.data.frame() %>%
+  rbind(apply(numericosTabela, 2, function(x) {
+    round(sd(x), 3)
+  }))
+
+row.names(tabela) = c(rownames(tabela)[1:6], "Sd")
+
+tabela %>%
+  knitr::kable() %>%
+  kableExtra::scroll_box(width = "100%")
+```
+</details>
+
+
+```{r echo=FALSE}
+numericosTabela = base %>%
+  select_if(is.numeric) %>%
+  .[, -7]
+
+tabela = do.call(cbind, lapply(numericosTabela,function(x) {
+                                   if (sum(x) > 30000000)
+                                     summary(x, digits = 8)
+                                   else
+                                     summary(x, digits = 3)
+                                 })) %>%
+  as.data.frame() %>%
+  rbind(apply(numericosTabela, 2, function(x) {
+    round(sd(x), 3)
+  }))
+
+row.names(tabela) = c(rownames(tabela)[1:6], "Sd")
+
+tabela %>%
+  knitr::kable() %>%
+  kableExtra::scroll_box(width = "100%")
+```
+
+
+A tabela abaixo mostra a quantidade de categorias para cada variável qualitativa do banco de dados que será utilizado.
+
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+lapply(base %>% 
+        select_if(is.factor),
+      function(x){length(levels(x))}) %>%
+  as.data.frame(row.names = "Qtd Categorias") %>% 
+  knitr::kable() %>%
+  kableExtra::scroll_box(width = "100%")
+```
+</details>
+
+
+```{r echo=FALSE}
+lapply(base %>% 
+        select_if(is.factor),
+      function(x){length(levels(x))}) %>%
+  as.data.frame(row.names = "Qtd Categorias") %>% 
+  knitr::kable() %>%
+  kableExtra::scroll_box(width = "100%")
+```
+
+
+## Visualização
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  ggplot(aes(x = gender)) +
+  geom_bar(fill = "royalblue") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Gênero",
+       y = "Frequencia",
+       title = "Frequência de gêneros") +
+  theme_minimal() +
+  scale_x_discrete(breaks = c("F", "M"),
+                   labels = c("Feminino", "Masculino")) +
+  ylim(c(0,30000))
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  ggplot(aes(x = gender)) +
+  geom_bar(fill = "royalblue") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Gênero",
+       y = "Frequencia",
+       title = "Frequência de gêneros") +
+  theme_minimal() +
+  scale_x_discrete(breaks = c("F", "M"),
+                   labels = c("Feminino", "Masculino")) +
+  ylim(c(0,30000))
+```
+
+A quantidade de clientes mulheres é maior do que o dobro em relação aos homens.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  mutate(maritalStatus = factor(maritalStatus,
+                                c("S", "C", "O", "V", "D"))) %>%
+  ggplot(aes(x = maritalStatus)) +
+  geom_bar(fill = "royalblue") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Estado civíl",
+       y = "Frequência",
+       title = "Frequência dos estados civis") +
+  theme_minimal() +
+  scale_x_discrete(
+    breaks = c("S", "C", "O", "V", "D"),
+    labels = c("Solteiro", "Casado", "Outro", "Viúvo", "Divorciado")
+  ) +
+  ylim(c(0,28000))
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  mutate(maritalStatus = factor(maritalStatus,
+                                c("S", "C", "O", "V", "D"))) %>%
+  ggplot(aes(x = maritalStatus)) +
+  geom_bar(fill = "royalblue") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Estado civíl",
+       y = "Frequência",
+       title = "Frequência dos estados civis") +
+  theme_minimal() +
+  scale_x_discrete(
+    breaks = c("S", "C", "O", "V", "D"),
+    labels = c("Solteiro", "Casado", "Outro", "Viúvo", "Divorciado")
+  ) +
+  ylim(c(0,28000))
+```
+
+
+
+O estado civil da maioria dos indivíduos da base de analise é composta por solteiros, sendo seguidos dos casados, outros, viúvos e divorciados, respectivamente.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  mutate(ageCat = cut(age,
+                      breaks = c(0, 20, 30, 40, 50, 60, 70, 80, 90))) %>%
+  ggplot(aes(x = ageCat)) +
+  geom_bar(fill = "royalblue",
+           col = "black") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Intervalo de Idade",
+       y = "Frequência",
+       title = "Distribuição das idades") +
+  theme_minimal()+
+  ylim(c(0,15000))
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  mutate(ageCat = cut(age,
+                      breaks = c(0, 20, 30, 40, 50, 60, 70, 80, 90))) %>%
+  ggplot(aes(x = ageCat)) +
+  geom_bar(fill = "royalblue",
+           col = "black") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Intervalo de Idade",
+       y = "Frequência",
+       title = "Distribuição das idades") +
+  theme_minimal()+
+  ylim(c(0,15000))
+```
+
+
+```{r include=FALSE}
+media = mean(base$age) %>% round(1)
+desvio = sd(base$age) %>% round(1)
+mediana = median(base$age) %>% round(1)
+moda = which.max(table(base$age)) %>% names() %>% as.numeric()
+```
+
+
+A maior densidade das idades dos indivíduos se concentra entre 20 e 40 anos. A média da idade é `r media` com desvio padrão de `r desvio` enquanto a mediana é de `r mediana` e moda de `r moda`. 
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  mutate(week = ceiling(bestPaymentDay / 7)) %>%
+  mutate(bestPaymentDay_fac = factor(bestPaymentDay,
+                                     levels = 1:28)) %>%
+  mutate(dayWeek = bestPaymentDay %% 7,
+         dayWeek = ifelse(dayWeek == 0,
+                          7,
+                          dayWeek)) %>%
+  group_by(week, dayWeek, bestPaymentDay_fac) %>%
+  summarise(frequencia = n(),
+            .groups = "drop") %>%
+  tidyr::complete(week,
+                  tidyr::nesting(dayWeek),
+                  fill = list(frequencia = 0)) %>%
+  arrange(week, dayWeek) %>%
+  mutate(bestPaymentDay_fac = 1:28) %>%
+  ggplot(aes(x = dayWeek, y = -week)) +
+  geom_tile(aes(fill = frequencia),
+            col = "black") +
+  geom_text(aes(label = bestPaymentDay_fac),
+            size = 5,
+            colour = "black") +
+  theme_void() +
+  labs(title = "Frequência das melhores datas de pagamento",
+       fill = "Frequência") +
+  scale_fill_distiller(direction = 2) +
+  coord_fixed()
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  mutate(week = ceiling(bestPaymentDay / 7)) %>%
+  mutate(bestPaymentDay_fac = factor(bestPaymentDay,
+                                     levels = 1:28)) %>%
+  mutate(dayWeek = bestPaymentDay %% 7,
+         dayWeek = ifelse(dayWeek == 0,
+                          7,
+                          dayWeek)) %>%
+  group_by(week, dayWeek, bestPaymentDay_fac) %>%
+  summarise(frequencia = n(),
+            .groups = "drop") %>%
+  tidyr::complete(week,
+                  tidyr::nesting(dayWeek),
+                  fill = list(frequencia = 0)) %>%
+  arrange(week, dayWeek) %>%
+  mutate(bestPaymentDay_fac = 1:28) %>%
+  ggplot(aes(x = dayWeek, y = -week)) +
+  geom_tile(aes(fill = frequencia),
+            col = "black") +
+  geom_text(aes(label = bestPaymentDay_fac),
+            size = 5,
+            colour = "black") +
+  theme_void() +
+  labs(title = "Frequência das melhores datas de pagamento",
+       fill = "Frequência") +
+  scale_fill_distiller(direction = 2) +
+  coord_fixed()
+```
+
+
+O melhor dia de pagamento para a maioria dos clientes é o dia 12 com uma frequência de 10150 clientes, seguidos do dia 8 com frequência de 7206 e dia 18 com 6637 indivíduos. Outra observação importante é que os primeiros sete dias possuem baixa frequência de melhores dias de pagamento.
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+options(scipen = 999)
+salarioMinimo = 1045
+
+base %>%
+  mutate(incomeCat = cut(
+    personalNetIncome,
+    breaks = c(
+      -1,
+      0,
+      1 * salarioMinimo,
+      2 * salarioMinimo,
+      3 * salarioMinimo,
+      4 * salarioMinimo,
+      max(personalNetIncome)
+    ),
+    labels = c("0",
+               "(0,1]",
+               "(1,2]",
+               "(2,3]",
+               "(3,4]",
+               "4+")
+  )) %>%
+  ggplot(aes(x = incomeCat)) +
+  geom_bar(fill = "royalblue",
+           col = "black") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Intervalo de salário mínimo",
+       y = "Frequência",
+       title = "Distribuição de renda em salários mínimos") +
+  theme_minimal()+
+  ylim(c(0,35000))
+```
+</details>
+
+```{r echo=FALSE}
+options(scipen = 999)
+salarioMinimo = 1045
+
+base %>%
+  mutate(incomeCat = cut(
+    personalNetIncome,
+    breaks = c(
+      -1,
+      0,
+      1 * salarioMinimo,
+      2 * salarioMinimo,
+      3 * salarioMinimo,
+      4 * salarioMinimo,
+      max(personalNetIncome)
+    ),
+    labels = c("0",
+               "(0,1]",
+               "(1,2]",
+               "(2,3]",
+               "(3,4]",
+               "4+")
+  )) %>%
+  ggplot(aes(x = incomeCat)) +
+  geom_bar(fill = "royalblue",
+           col = "black") +
+  geom_text(
+    aes(y = ..count.., label = ..count..),
+    stat = "count",
+    vjust = -0.5,
+    cex = 5
+  ) +
+  labs(x = "Intervalo de salário mínimo",
+       y = "Frequência",
+       title = "Distribuição de renda em salários mínimos") +
+  theme_minimal()+
+  ylim(c(0,35000))
+```
+
+
+
+```{r include=FALSE}
+summary(base$personalNetIncome)
+quantil99 = quantile(base$personalNetIncome, prob = 0.99)
+quantil99
+
+```
+
+Para facilitar a interpretação dos dados foi utilizado o salário mínimo de `r format(salarioMinimo, decimal.mark = ",",nsmall = 2)` Reais como referência, pois a base dados possui grande quantidade de outliers. Por exemplo o máximo de renda observado foi de `r  format(max(base$personalNetIncome), big.mark = ".", digits = 2, nsmall = 2, decimal.mark = ",")`, mas 99% dos clientes ganham até `r format(quantil99, decimal.mark = ",",nsmall = 2)` Reais. A grande maioria dos clientes recebem de 0 a 1 salário mínimo.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  ggplot(aes(x = BAD)) +
+  geom_bar(fill = "royalblue") +
+  stat_bin(
+    aes(label = ..count..),
+    breaks = seq(-0.5, 1.5, 1),
+    binwidth = 3,
+    geom = "text",
+    color = "black",
+    vjust = -2
+  ) +
+  stat_bin(
+    aes(label = paste0("(", round(
+      ..count.. / sum(..count..) * 100, 1
+    ), "%)")),
+    breaks = seq(-0.5, 1.5 , 1),
+    binwidth = 3,
+    geom = "text",
+    color = "black",
+    vjust = -0.5
+  ) +
+  labs(x = "Atraso no pagamento",
+       y = "Frequencia",
+       title = "Atraso no pagamento do empréstimo") +
+  theme_minimal() +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Não", "Sim")) +
+  ylim(0, 35000)
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  ggplot(aes(x = BAD)) +
+  geom_bar(fill = "royalblue") +
+  stat_bin(
+    aes(label = ..count..),
+    breaks = seq(-0.5, 1.5, 1),
+    binwidth = 3,
+    geom = "text",
+    color = "black",
+    vjust = -2
+  ) +
+  stat_bin(
+    aes(label = paste0("(", round(
+      ..count.. / sum(..count..) * 100, 1
+    ), "%)")),
+    breaks = seq(-0.5, 1.5 , 1),
+    binwidth = 3,
+    geom = "text",
+    color = "black",
+    vjust = -0.5
+  ) +
+  labs(x = "Atraso no pagamento",
+       y = "Frequencia",
+       title = "Atraso no pagamento do empréstimo") +
+  theme_minimal() +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Não", "Sim")) +
+  ylim(0, 35000)
+```
+
+
+A grande maioria dos clientes não atrasam no pagamento do empréstimo. Como essa é a variável resposta para a modelagem, esse desbalanceamento pode causar problemas para o ajuste do modelo classificador. 
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  mutate(BAD = factor(BAD)) %>%
+  ggplot(aes(y = personalNetIncome,
+             x = BAD,
+             fill = factor(BAD))) +
+  geom_boxplot(outlier.shape = NA) +
+  coord_cartesian(ylim = c(0, 1 * salarioMinimo)) +
+  scale_x_discrete(breaks = c(0, 1),
+                   labels = c("Não", "Sim")) +
+  labs(x = "Atraso no pagamento",
+       y = "Renda Pessoal",
+       title = "Atraso no pagamento do empréstimo X Renda pessoal") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+</details>
+
+
+```{r echo=FALSE}
+base %>%
+  mutate(BAD = factor(BAD)) %>%
+  ggplot(aes(y = personalNetIncome,
+             x = BAD,
+             fill = factor(BAD))) +
+  geom_boxplot(outlier.shape = NA) +
+  coord_cartesian(ylim = c(0, 1 * salarioMinimo)) +
+  scale_x_discrete(breaks = c(0, 1),
+                   labels = c("Não", "Sim")) +
+  labs(x = "Atraso no pagamento",
+       y = "Renda Pessoal",
+       title = "Atraso no pagamento do empréstimo X Renda pessoal") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+Foi gerado gráfico boxplot para estudar a relação entre renda pessoal e atraso no pagamento. Nota-se que ambos apresentam mediana e primeiro quartil similares, porém aqueles que não atrasam o pagamento possuem maior variação na renda pessoal.
+
+Obs: Foram removidos os outliers para melhor visualização.
+
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+base %>%
+  mutate(BAD = factor(BAD)) %>%
+  ggplot(aes(
+    y = monthsInTheJob / 12,
+    x = BAD,
+    fill = factor(BAD)
+  )) +
+  geom_boxplot(outlier.shape = NA) +
+  coord_cartesian(ylim = c(0, 10)) +
+  scale_x_discrete(breaks = c(0, 1),
+                   labels = c("Não", "Sim")) +
+  labs(x = "Atraso no pagamento",
+       y = "Tempo de trabalho em anos",
+       title = "Atraso no pagamento do empréstimo X Tempo de trabalho em anos") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+</details>
+
+```{r echo=FALSE}
+base %>%
+  mutate(BAD = factor(BAD)) %>%
+  ggplot(aes(
+    y = monthsInTheJob / 12,
+    x = BAD,
+    fill = factor(BAD)
+  )) +
+  geom_boxplot(outlier.shape = NA) +
+  coord_cartesian(ylim = c(0, 10)) +
+  scale_x_discrete(breaks = c(0, 1),
+                   labels = c("Não", "Sim")) +
+  labs(x = "Atraso no pagamento",
+       y = "Tempo de trabalho em anos",
+       title = "Atraso no pagamento do empréstimo X Tempo de trabalho em anos") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+Foi gerado gráfico boxplot para estudar a relação entre anos de trabalho e atraso no pagamento. Nota-se que a mediana daqueles indivíduos que não atrasaram no pagamento do empréstimo é 2 anos, enquanto aqueles que atrasaram é de apenas 1. O tempo de trabalhos em anos para aqueles que atrasaram no empréstimo está mais concentrado.
+
+Obs: Foram removidos os outliers para melhor visualização.
+
+## Modelagem
+
+Para fazer modelagem irá ser utilizado o pacote `caret` do R.
+
+```{r message=F}
+library(caret)
+```
+
+Será comparado o desempenho das seguintes técnicas de aprendizado de máquina: `Decision Tree`, `KNN`, `Naive Bayes` e `GLM`. Optou-se remover as variáveis `professionCode` e `areaCodeResidencialPhone`, pois elas possuem 291 e 59 fatores respectivamente, o que ocasionaria uma maior complexidade para a modelagem, gerando maior custo computacional.
+
+```{r}
+base = base %>% 
+  select(-c(professionCode,
+            areaCodeResidencialPhone)) %>% 
+  mutate(BAD = as.factor(BAD))
+```
+
+Para que os resultados desse relatório possam ser replicados será utilizado uma seed que será composta pelos números da data do dia.
+
+```{r}
+set.seed(10022021)
+```
+
+
+Afim de mostrar que o problema de desbalanceamento da base irá prejudicar na modelagem, será ajustado um modelo utilizando a técnica de `Decision Tree` antes da correção desse problema.
+
+Será utilizado a técnica de reamostragem `repeatedcv` com 10 folds e 3 repetições em todas as modelagens.
+
+```{r}
+ctrl_cv = trainControl(method = "repeatedcv",
+                       number = 10,
+                       repeats = 3)
+```
+
+Modelagem por `Decision Tree`:
+```{r}
+modelDecision = train(BAD ~ .,
+                      method = "rpart",
+                      trControl = ctrl_cv,
+                      data = base)
+
+predicaoDecision = predict(modelDecision, newdata = base)
+confusionMatrix(predicaoDecision, base$BAD)
+```
+
+Apesar do modelo apresentar uma acurácia de 80%, ele está classificando todas as observações com BAD = 0 (cliente bom pagador) e ignorando aquelas com BAD = 1 (cliente mau pagador). 
+
+Afim de contornar este problema, será adotado a técnica de *oversampling* que tem como objetivo equilibrar a base de dados para gerar melhor resultado na modelagem. Para isso será sorteada aleatoriamente números de observações da categoria BAD = 1 até ficar com o mesmo número das com BAD = 0, assim balanceando a proporção da base.
+
+Para treino do modelo será utilizado a base de tamanho 70% da original aplicando a técnica de *oversampling*. Para a base teste será utilizado os 30% restante da base original.
+
+
+```{r}
+Index = createDataPartition(y = base$BAD,
+                                     p = 0.70,
+                                     list = F)
+
+baseBalanceada = base[Index,]
+teste = base[-Index,]
+
+
+numClass1 = table(baseBalanceada$BAD)[[1]]
+
+classe1 = baseBalanceada %>%
+  filter(BAD == 1) %>% 
+  sample_n(numClass1, replace = T)
+
+classe0 = baseBalanceada %>%
+  filter(BAD == 0) 
+
+
+baseBalanceada = rbind(classe0,
+                       classe1)
+
+baseBalanceada %>% 
+  group_by(BAD) %>% 
+  summarise(frequencia = n()) %>% 
+  knitr::kable()
+```
+
+
+Modelando novamente por `Decision Tree`:
+```{r}
+modelDecision = train(BAD ~ .,
+                      method = "rpart",
+                      trControl = ctrl_cv,
+                      data = baseBalanceada)
+
+predicaoDecision = predict(modelDecision, newdata = teste)
+DECISION = confusionMatrix(predicaoDecision, teste$BAD); DECISION
+```
+
+Modelando `KNN`:
+```{r}
+modelKNN = train(BAD ~ .,
+                 method = "knn",
+                 trControl = ctrl_cv,
+                 data = baseBalanceada)
+
+predicaoKNN = predict(modelKNN, newdata = teste)
+KNN = confusionMatrix(predicaoKNN, teste$BAD); KNN
+```
+
+Modelando `Naive Bayes`:
+```{r}
+modelNaive = train(BAD ~ .,
+                   method = "nb",
+                   trControl = ctrl_cv,
+                   data = baseBalanceada)
+
+predicaoNaive = predict(modelNaive, newdata = teste)
+NAIVE = confusionMatrix(predicaoNaive, teste$BAD); NAIVE
+```
+
+Modelando `GLM`:
+```{r}
+modelGLM = train(BAD ~ .,
+                 method = "glm",
+                 trControl = ctrl_cv,
+                 data = baseBalanceada)
+
+predicaoGLM = predict(modelGLM, newdata = teste)
+GLM = confusionMatrix(predicaoGLM, teste$BAD); GLM
+```
+
+
+O gráfico a seguir representa o tempo de execução dos modelos:
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+tibble(
+  Tempo = c(
+    modelKNN$times[[1]][[3]],
+    modelNaive$times[[1]][[3]],
+    modelGLM$times[[1]][[3]],
+    modelDecision$times[[1]][[3]]
+  ),
+  Modelos = factor(
+    c("KNN",
+      "Naive Bayes",
+      "GLM",
+      "Decision Tree")
+    ,
+    levels = c("KNN",
+               "Naive Bayes",
+               "GLM",
+               "Decision Tree")
+  )
+)  %>%
+  ggplot(aes(x = Modelos, y = Tempo)) +
+  geom_bar(fill = "royalblue",
+           stat = "identity") +
+  labs(x = "Modelos",
+       y = "Tempo(s)",
+       title = "Tempo em segundos dos treinamentos dos modelos") +
+  theme_minimal() +
+  geom_text(aes(y = Tempo, label = round(Tempo, 3)),
+            vjust = -0.5,
+            cex = 5) +
+  ylim(c(0, 400))
+```
+</details>
+
+```{r echo=FALSE}
+  tibble(
+  Tempo = c(
+    modelKNN$times[[1]][[3]],
+    modelNaive$times[[1]][[3]],
+    modelGLM$times[[1]][[3]],
+    modelDecision$times[[1]][[3]]
+  ),
+  Modelos = factor(
+    c("KNN",
+      "Naive Bayes",
+      "GLM",
+      "Decision Tree")
+    ,
+    levels = c("KNN",
+               "Naive Bayes",
+               "GLM",
+               "Decision Tree")
+  )
+)  %>%
+  ggplot(aes(x = Modelos, y = Tempo)) +
+  geom_bar(fill = "royalblue",
+           stat = "identity") +
+  labs(x = "Modelos",
+       y = "Tempo(s)",
+       title = "Tempo em segundos dos treinamentos dos modelos") +
+  theme_minimal() +
+  geom_text(aes(y = Tempo, label = round(Tempo, 3)),
+            vjust = -0.5,
+            cex = 5) +
+  ylim(c(0, 400))
+```
+
+
+Os tempos de execução dos modelos de `GLM` e `Decision Tree` são discrepantes em relação aos de `KNN` e `Naive Bayes`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A tabela a seguir resume o desempenho dos modelos testados:
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+tibble(Modelos = c("Decision Tree",
+                   "KNN",
+                   "Naive Bayes",
+                   "GLM"),
+       Sensibilidade = c(DECISION$byClass[[1]],
+                         KNN$byClass[[1]],
+                         NAIVE$byClass[[1]],
+                         GLM$byClass[[1]]),
+       Especificidade = c(DECISION$byClass[[2]],
+                          KNN$byClass[[2]],
+                          NAIVE$byClass[[2]],
+                          GLM$byClass[[2]]),
+       Acurácia = c(DECISION$overall[[1]],
+                    KNN$overall[[1]],
+                    NAIVE$overall[[1]],
+                    GLM$overall[[1]])) %>% 
+  arrange(desc(`Acurácia`)) %>% 
+  knitr::kable()
+```
+</details>
+
+```{r echo=FALSE}
+predicaoD = predict(modelDecision, teste, type = 'prob')[, 2]
+predicaoG = predict(modelGLM, teste, type = 'prob')[, 2]
+predicaoN = predict(modelNaive, teste, type = 'prob')[, 2]
+predicaoK = predict(modelKNN, teste, type = 'prob')[, 2]
+
+tibble(Modelos = c("Decision Tree",
+                   "KNN",
+                   "Naive Bayes",
+                   "GLM"),
+       Sensibilidade = c(DECISION$byClass[[1]],
+                         KNN$byClass[[1]],
+                         NAIVE$byClass[[1]],
+                         GLM$byClass[[1]]),
+       Especificidade = c(DECISION$byClass[[2]],
+                          KNN$byClass[[2]],
+                          NAIVE$byClass[[2]],
+                          GLM$byClass[[2]]),
+       Acurácia = c(DECISION$overall[[1]],
+                    KNN$overall[[1]],
+                    NAIVE$overall[[1]],
+                    GLM$overall[[1]]),
+       AUC = c(ROCR::performance(predictionD, measure = "auc")@y.values[[1]],
+               ROCR::performance(predictionK, measure = "auc")@y.values[[1]],
+               ROCR::performance(predictionN, measure = "auc")@y.values[[1]],
+               ROCR::performance(predictionG, measure = "auc")@y.values[[1]])) %>% 
+  arrange(desc(`Acurácia`)) %>% 
+  knitr::kable()
+```
+
+Retomando o objetivo do estudo: Desenvolver modelo de credit scoring com intuito de diminuir o nível de mau pagadores na base de clientes da mutual.
+
+Para isso, é importante definir o significado das métricas presentes na tabela. A sensibilidade é a proporção dos clientes bom pagadores que foram classificados como bom pagadores; A especificidade é a proporção dos clientes mau pagadores que foram classificados como mau pagadores; A acurácia é a proporção dos acertos em geral.
+
+Comparando os modelos, o de `Decision Tree` apresentou uma boa métrica de especificidade, porém apresentou um baixo valor para sensibilidade, mas mais aceitável do que o `Naive Bayes`. Caso seja mais importante identificar um mau pagador, levando em consideração o risco de classificar bom pagadores de forma errada, o modelo `Decision Tree` mostrou bom resultado.
+
+O modelo de `GLM` apresentou a melhor acurácia dos testados, com uma proporção de 58% de sensiblidade e 63% de especificidade. O `GLM` mostrou ser um modelo mais equilibrado, ideal para problemas em que a importância de identificar um mau pagador é a mesmo do que um bom pagador.
+
+Uma outra maneira de avaliar um classificador é utilizando a curva ROC. Pode-se observar a curva ROC dos modelos de `Decision Tree` e `GLM` nos gráficos a seguir.
+
+
+<details>
+  <summary>Exibir Código</summary>
+```{r eval = F}
+predicaoD = predict(modelDecision, teste, type = 'prob')[, 2]
+predicaoG = predict(modelGLM, teste, type = 'prob')[, 2]
+
+roc_graph = function(prediction, obs, titulo){
+  prediction = ROCR::prediction(prediction, obs)
+  performance = ROCR::performance(prediction, "tpr", "fpr")
+  auc = ROCR::performance(prediction, measure = "auc")@y.values[[1]]
+  fx = attr(performance, "y.values")[[1]] - (attr(performance, "x.values")[[1]])
+  df = data.frame(xvalues = performance@x.values[[1]], 
+                  yvalues = performance@y.values[[1]],
+                  alpha_ = performance@alpha.values[[1]])
+  print(
+    df %>% 
+      ggplot(aes(x = xvalues, y = yvalues)) +
+      geom_line(size = 2, col = "royalblue") +
+      geom_abline(slope=1, alpha = 0.5) +
+      geom_text(x = .75, y = .15, label = paste("AUC =", round(auc,3)), size = 10) +
+      scale_color_gradient(low="blue", 
+                           high="green", 
+                           breaks=c(0, .25, .5, .75, 1), 
+                           limits=c(0,1)) +
+      coord_cartesian(clip = 'off') +
+      ylab('Verdadeiro Positivo (Sensibilidade)')+
+      xlab('Falso Positivo (1 - Especificidade)')+
+      ggtitle(titulo)
+  )
+}
+
+roc_graph(predicaoD, teste$BAD, "ROC Decision Tree")
+roc_graph(predicaoG, teste$BAD, "ROC GLM")
+
+```
+</details>
+
+
+```{r echo=FALSE, message=FALSE}
+predicaoD = predict(modelDecision, teste, type = 'prob')[, 2]
+predicaoG = predict(modelGLM, teste, type = 'prob')[, 2]
+
+roc_graph = function(prediction, obs, titulo){
+  prediction = ROCR::prediction(prediction, obs)
+  performance = ROCR::performance(prediction, "tpr", "fpr")
+  auc = ROCR::performance(prediction, measure = "auc")@y.values[[1]]
+  fx = attr(performance, "y.values")[[1]] - (attr(performance, "x.values")[[1]])
+  df = data.frame(xvalues = performance@x.values[[1]], 
+                  yvalues = performance@y.values[[1]],
+                  alpha_ = performance@alpha.values[[1]])
+  print(
+    df %>% 
+      ggplot(aes(x = xvalues, y = yvalues)) +
+      geom_line(size = 2, col = "royalblue") +
+      geom_abline(slope=1, alpha = 0.5) +
+      geom_text(x = .75, y = .15, label = paste("AUC =", round(auc,3)), size = 10) +
+      scale_color_gradient(low="blue", 
+                           high="green", 
+                           breaks=c(0, .25, .5, .75, 1), 
+                           limits=c(0,1)) +
+      coord_cartesian(clip = 'off') +
+      ylab('Verdadeiro Positivo (Sensibilidade)')+
+      xlab('Falso Positivo (1 - Especificidade)')+
+      ggtitle(titulo)
+  )
+}
+
+roc_graph(predicaoD, teste$BAD, "ROC Decision Tree")
+roc_graph(predicaoG, teste$BAD, "ROC GLM")
+
+```
+
+
+A curva ROC ilustra a relação entre a proporção de verdadeiros positivos
+e falsos positivos, calculadas em diferentes pontos de corte a partir das probabilidades geradas por um modelo para as classificações. AUC é a métrica que cálcula a área sobre a curva ROC, em geral, modelos de classificação procuram maximizar essa métrica.
+
+
+
+Apesar dos resultados mostrados, é possível gerar modelos mais robustos que podem apresentar melhor performance utilizando técnicas mais complexas como por exemplo: `Bayesian network`, `Neural network`, `Support vector machine`, entre outras. Porém a complexidade e o custo computacional podem aumentar significativamente.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
