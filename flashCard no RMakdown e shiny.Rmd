@@ -1,0 +1,198 @@
+---
+title: "Dois gráficos para variável quantitativa"
+subtitle: "E uma análise dos outliers"
+summary: "aula de estatística para variáveis quantitativas"
+author: "Prof. Steven Dutt Ross"
+date: "18/03/2021"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introdução
+
+Aqui vamos olhar a base de dados.
+
+```{r}
+load("C:/Users/Hp/Desktop/Base_de_dados-master/CARROS.RData")
+str(CARROS)
+```
+
+Aqui vou colocar um resumo dos dados.
+
+```{r, echo=FALSE, warning=FALSE,comment=NA}
+summary(CARROS)
+```
+
+# Transformação dos dados
+
+Aqui vou transformar a variáveis comb e marcha.
+
+```{r}
+
+CARROS$Tipodecombustivel2 <- ifelse(CARROS$Tipodecombustivel==0,"Gas","Alc")
+CARROS$Tipodemarcha2 <- ifelse(CARROS$TipodeMarcha==0,"Auto","Manual")
+
+```
+
+## Gráfico de Barras
+
+meu primeiro gráfico de barras
+
+```{r, echo=FALSE}
+barplot(table(CARROS$Tipodecombustivel2),col = c('royalblue','orange'),
+        main='Distribuição dos carros por tipo de comb',
+        ylim =c(0,20) )
+
+```
+
+# Estudo de variáveis quantitativas
+
+### Km/l
+
+```{r}
+summary(CARROS$Kmporlitro)
+
+hist(CARROS$Kmporlitro, col = "skyblue",
+     main = "Meu histograma",
+     xlab = "Km/l",
+     ylab = "Frequência")
+
+```
+
+### Preço do carro
+
+```{r,fig.align='center'}
+library(flashCard)
+df1 <- data.frame(
+  front = c("Ozymandias"," ", " "),
+  back =c("Ozymandias","Encontrei um viajante vindo de uma antiga terra  
+Que me disse: — Duas imensas e destroncadas pernas de pedra
+Erguem-se no deserto. Perto delas, sobre a areia
+Meio enterrado, jaz um rosto despedaçado, cuja carranca
+Com lábio enrugado e sorriso de frio comando
+Dizem que seu escultor soube ler bem suas paixões
+Que ainda sobrevivem, estampadas nessas coisas inertes,
+A mão que os escarneceu e o coração que os alimentou
+E no pedestal aparecem estas palavras:'Meu nome é Ozymandias, rei dos reis:   
+Contemplai as minhas obras, ó poderosos e desesperai-vos!'
+Nada mais resta: em redor a decadência", "Daquele destroço colossal, sem limite e vazio
+As areias solitárias e planas se espalham para longe")
+)
+df2 <- data.frame(
+  front = c("Lisbon Revisited (1923)","Que mal fiz eu aos deuses todos?","Queriam-me casado, fútil, quotidiano e tributável?"),
+  back =c("Lisbon Revisited (1923)","Não: não quero nada
+Já disse que não quero nada.
+ 
+Não me venham com conclusões!
+A única conclusão é morrer.
+ 
+Não me tragam estéticas!
+Não me falem em moral!
+Tirem-me daqui a metafísica!
+Não me apregoem sistemas completos, não me enfileirem conquistas
+Das ciências (das ciências, Deus meu, das ciências!) —
+Das ciências, das artes, da civilização moderna!
+ 
+Que mal fiz eu aos deuses todos?
+ 
+Se têm a verdade, guardem-na!
+ 
+Sou um técnico, mas tenho técnica só dentro da técnica.
+Fora disso sou doido, com todo o direito a sê-lo.
+Com todo o direito a sê-lo, ouviram?
+ 
+Não me macem, por amor de Deus!
+ 
+Queriam-me casado, fútil, quotidiano e tributável?
+Queriam-me o contrário disto, o contrário de qualquer coisa?
+Se eu fosse outra pessoa, fazia-lhes, a todos, a vontade.
+Assim, como sou, tenham paciência!
+Vão para o diabo sem mim,
+Ou deixem-me ir sozinho para o diabo!
+Para que havemos de ir juntos?", "Não me peguem no braço!
+Não gosto que me peguem no braço. Quero ser sozinho.
+Já disse que sou sozinho!
+Ah, que maçada quererem que eu seja de companhia!
+ 
+Ó céu azul — o mesmo da minha infância —
+Eterna verdade vazia e perfeita!
+Ó macio Tejo ancestral e mudo,
+Pequena verdade onde o céu se reflecte!
+Ó mágoa revisitada, Lisboa de outrora de hoje!
+Nada me dais, nada me tirais, nada sois que eu me sinta.
+ 
+Deixem-me em paz! Não tardo, que eu nunca tardo...
+E enquanto tarda o Abismo e o Silêncio quero estar sozinho!")
+)
+flashCard(df1, elementId = "card", 
+            frontColor = "#090e87",
+            backColor = "royalblue",
+            front_text_color = "white",
+            back_text_color = "orange",
+            width = "900px",
+            height = "250px")
+flashCard(df2, frontColor = "#090e87",
+            backColor = "lightgreen",
+            front_text_color = "white",
+            back_text_color = "black",
+            width = "900px",
+            height = "500px")
+```
+
+
+```{r}
+summary(CARROS$Preco)
+
+hist(CARROS$Preco, col="navy",
+     main = "histograma do preço",
+     xlab = "preço do carro")
+```
+
+### Estudo dos outliers
+
+```{r}
+numeros<-c(1,2,3,4,5)
+numeros
+mean(numeros)
+median(numeros)
+
+numeros2<-c(1,2,3,4,50000)
+numeros2
+
+mean(numeros2)
+median(numeros2)
+```
+
+# O BOX PLOT
+
+```{r}
+# BOXPLOT
+
+boxplot(CARROS$Kmporlitro, col="red",
+        main="meu boxplot",
+        ylim=c(0,40))
+
+
+boxplot(CARROS$Preco, col="white",
+        main="meu boxplot 2",
+        ylim=c(0,500))
+
+```
+
+
+Termino da aula de gráfico de barras, histograma, outliers e boxplot.
+
+
+
+
+
+
+
+
+
+
+
