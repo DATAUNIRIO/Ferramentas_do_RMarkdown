@@ -1,0 +1,22 @@
+---
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: "collapseoutput.js"
+---
+
+### This output is closed first
+.details[
+```{r}
+summary(cars)
+```
+]
+
+### This output is open first
+.details-open[
+```{r}
+str(cars)
+```
+]
+
+
