@@ -1,0 +1,24 @@
+https://raw.githubusercontent.com/DATAUNIRIO/aulaunirio/master/img/help_do_R.png
+
+```{r, echo=FALSE}
+library(htmltools)
+thumbnail <- function(title, img, href, caption = TRUE) {
+  div(class = "col-sm-4",
+      a(class = "thumbnail", title = title, href = href,
+        img(src = img),
+        div(class = ifelse(caption, "caption", ""),
+            ifelse(caption, title, "")
+        )
+      )
+  )
+}
+```
+
+You can write functions which build HTML like the one above then call them from other R code which combines them with your data to produce dynamic HTML. An R code chunk that makes use of this function might look like this:
+  
+```{r, echo=FALSE}
+thumbnail("Apple", "images/apple.png", "https://en.wikipedia.org/wiki/Apple")
+thumbnail("Grape", "images/grape.png", "https://en.wikipedia.org/wiki/Grape")
+thumbnail("Peach", "images/peach.png", "https://en.wikipedia.org/wiki/Peach")
+```
+

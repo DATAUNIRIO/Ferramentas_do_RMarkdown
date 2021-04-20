@@ -1,0 +1,27 @@
+- title: "Setting Up R"
+  img: examples/01-data-basics/images/anonymous.png
+  href: https://jjallaire.shinyapps.io/learnr-tutorial-00-setup/
+  source: https://dataunirio.github.io/
+  showcase: true
+- title: "Data Basics"
+  img: examples/01-data-basics/images/anonymous.png
+  href: https://dataunirio.github.io/GALERIA_DE_GRAFICOS/
+  source: https://dataunirio.github.io/
+  showcase: true
+- title: "Filtering Observations"
+  img: img/novologotipo.png
+  href: https://dataunirio.github.io/GALERIA_DE_GRAFICOS/
+  source: https://dataunirio.github.io/
+  showcase: true
+- title: "Summarizing Data"
+  img: img/avatarR.png
+  href: https://dataunirio.github.io/GALERIA_DE_GRAFICOS/
+  source: https://dataunirio.github.io/
+  showcase: true
+- title: "Creating New Variables"
+  img: img/boxplot.png
+  href: https://dataunirio.github.io/GALERIA_DE_GRAFICOS/
+  source: https://dataunirio.github.io/
+  showcase: true
+
+  

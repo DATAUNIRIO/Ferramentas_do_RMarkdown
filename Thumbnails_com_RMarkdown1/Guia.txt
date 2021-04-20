@@ -1,0 +1,1 @@
+Para modificar o site tem que abrir o arquivo 'examples.yml' com notepadplusplus

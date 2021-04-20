@@ -1,0 +1,64 @@
+---
+title: "Examples"
+output:
+   html_document:
+     theme: cosmo
+     highlight: textmate
+     toc: true
+     toc_depth: 2
+     toc_float: true
+     collapsed: true
+---
+
+<head>
+<style>
+body {
+    background-color: #c7eaea;
+    
+}
+
+.list-group-item.active, .list-group-item.active:hover,
+.list-group-item.active:focus {
+    z-index: 2;
+    color: #ffffff;
+    background-color: #239794;
+    border-color: #dddddd;
+}
+
+
+}
+</style>
+</head>
+
+Some examples of tutorials created using the **learnr** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/learnr/tree/master/examples/.
+
+<br/>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+source("utils.R")
+```
+
+```{r, echo=FALSE}
+#examples()
+examples(showcaseOnly = TRUE)
+```
+
+
+# Por um mundo maior que o gráfico de pizza
+
+Fazer uma nova visualização de dados é com tentar fazer um novo filme do Jean-Luc Godard ou uma nova intervenção do Andy Warhol. Tente começar pelo desenvolvimento de uma narrativa (contar uma história) com ajuda do R. Conte de maneira diferente daquela que a polícia ou que um funcionário público faria. **Gráficos de pizza são proibidos**. Tente dizer algo diferente. Por exemplo, bom você acordou tomou seu café, mas você sabe que não é somente isso. Tente saber o que é este ‘não há somente isto’.   
+
+> Inteligencia Estatística
+> inteligencia estatística é a capacidade que você desenvolve de gerar uma informação a partir da análise de uma base de dados para uma comunicação efetiva.
+
+O Excel e o SPSS também são proibidos. Estes softwares são como estradas pavimentadas. Todos já trilharam esse caminho.  É muito difícil inovar em uma ferramenta que já é muito utilizada.  Além disso, essas ferramentas são caras demais. 
+
+A seguir apresento um passo-a-passo no R com uma visualização de dados.
+
+# Passo zero
+## Carregar a base de dados
+
+Existem bases de dados em diversos formatos. Excel, CSV, TXT, DAT, SAV, JSON, entre outros. cada tipo de base de dados requer um pacote diferente no R.
+
+Neste exemplo, vamos utilizar o pacote RCurl para carregar um arquivo CSV do repositório do DATAUNIRIO no Github.
