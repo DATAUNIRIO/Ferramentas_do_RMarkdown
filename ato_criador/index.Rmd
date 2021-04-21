@@ -1,0 +1,509 @@
+---
+title: "Ciclo Ato Criador Outros Possíveis "
+author: "LP Produções"
+date: "16 de janeiro de 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE)
+#knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+#                      echo=FALSE, warning=FALSE, message=FALSE)
+
+load(file="Bd_Ato_Criador.RData")
+load(file="Bd_wordcloud.RData")
+```
+
+## Introdução
+![](https://scontent.fgig4-1.fna.fbcdn.net/v/t31.0-8/15250689_334090570311547_1992525596478348203_o.jpg?oh=8f68c17b902e2cff2e8d8c1f92662117&oe=5A343866)  
+.     
+  
+  
+> “O maior desafio é estar antenado com as questões que atravessam a vida humana no mundo contemporâneo”
+
+     
+       
+  
+Apresentamos o Relatório de Perfil de Público e Avaliação do **Ciclo Ato Criador Outros Possíveis**, um documento que traz as principais iniciativas e os resultados alcançados ao longo do ano de 2016. Com esta publicação, divulgamos o nosso jeito de realizar projetos culturais e os impactos de nossas atividades nas esferas cultural e social. As informações apresentadas aqui são referentes aos questionários aplicados ao público, que em 2016 respondeu 352 formulários. Neste relatório, mostramos os resultados percebidos pelo público dos eventos ao longo de 2016.
+
+### Sumário Executivo
+```{r message=F, echo=FALSE}
+library("bsplus")
+#ACCORDION
+bs_accordion(id = "meet_the_beatles") %>%
+  bs_append(title = "Palestrantes", content = "80,7% dos entrevistados consideraram ótimos os palestrantes do Ciclo Ato Criador Outros Possíveis") %>%
+  bs_append(title = "Eventos", content = "70,6% dos entrevistados consideraram ótimos os eventos do Ciclo Ato Criador Outros Possíveis") %>%
+  bs_append(title = "Intervenção/espetáculo", content = "63,8% dos entrevistados consideraram ótimas as intervenções do Ciclo Ato Criador Outros Possíveis") %>%
+  bs_append(title = "Avaliação", content = "Em uma nota de zero a dez, as avaliações médias dos encontros foram entre 8,33 e 9,76 ") %>%
+  bs_append(title = "Retorno", content = "98,6% gostariam de voltar para assistir outro evento do Ciclo Ato Criador Outros Possíveis") %>%
+  bs_append(title = "Veículos", content = "A recomendação de pessoas conhecidas, foi o meio que obteve a maior utilização")
+
+```
+
+
+
+### Mostra o Dicionário de Dados
+
+Mostra o CodeBook, ou seja, todas as variáveis do questionário e suas respectivas descrições.
+
+```{r message=F, echo=FALSE}
+library(DT)
+library(tibble)
+codebook<-tibble(variavel=names(Bd_Ato_Criador),
+          descricao=attributes(Bd_Ato_Criador)$variable.labels)
+datatable(codebook,
+options=list(
+language=list(search="busca",
+info="Mostrando de _START_ a _END_ de _TOTAL_ Variáveis",
+lengthMenu="Mostre _MENU_ Variáveis",
+paginate=list(previous="anterior",
+'next'="próximo"))))
+```
+
+### Opinião a respeito do(s) palestrante(s)
+
+No gráfico abaixo, podemos ver a opinião a respeito dos palestrantes. De uma forma geral, verifica-se que mais de 80% dos entrevistados consideraram o palestrante **ótimo**. Importante destacar que nenhum entrevistado considerou qualquer palestrante dos mais de vinte eventos como ruim (0% ruim). Como consequência, pode-se inferir que o público que assistiu as palestras apreciou o evento.
+
+```{r pressure, echo=FALSE}
+contagem = table(Bd_Ato_Criador$V4)
+porcent = round(contagem/sum(contagem)*100,2)
+rotulo=paste(" (",porcent,"%",")",sep="")
+bp<-barplot(table(Bd_Ato_Criador$V4), ylab="Frequência",col="royalblue", main="Gráfico 1 - Qual é a sua opinião a respeito do(s) palestrante(s)?")
+text(bp, 0, rotulo,cex=1,pos=3) 
+#plot(Bd_Ato_Criador$V4, col="royalblue")
+```
+
+Todavia, isso não aconteceu do mesmo modo em todas as áreas. A mesa *De Prometeu a Frankenstein* alcançou o máximo de 100% de aprovação enquanto a mesa  *Um corpo desconhecido* obteve até 10% de pessoas que consideraram regular. *Clique no botão Rows % para ver a tabela.*
+
+#### Tabela 1 - Opinião a respeito do(s) palestrante(s) por evento
+```{r, echo=FALSE,results='asis',message=FALSE}
+
+library(knitr)
+library(xtable)
+library(rmdformats)
+tab <- table(Bd_Ato_Criador$ID,Bd_Ato_Criador$V4)
+pilltabs(tab, count = FALSE, rows = TRUE, cols = FALSE, chisq = FALSE,
+resid = FALSE, row.names = TRUE)
+
+```
+
+### Avaliação geral do evento do dia
+
+Além da opinião sobre os palestrantes, foi pedido também para o entrevistado avaliar o evento do dia. Dos participantes que responderam, 76,6% dos entrevistados consideraram o evento do **Ciclo Ato Criador Outros Possíveis ótimo**.
+
+```{r , echo=FALSE}
+contagem2 = table(Bd_Ato_Criador$V3)
+porcent2 = round(contagem2/sum(contagem2)*100,2)
+rotulo2=paste(" (",porcent2,"%",")",sep="")
+bp2<-barplot(table(Bd_Ato_Criador$V3), ylab="Frequência",col="red", main="Gráfico 2 - Avaliação geral do evento de hoje")
+text(bp2, 0, rotulo2,cex=1,pos=3) 
+
+```
+
+Esta avaliação também pode ser vista por encontro. *Clique no botão Rows % para ver a tabela.*
+
+#### Tabela 2 - Avaliação geral do evento de hoje
+```{r, echo=FALSE,results='asis',message=FALSE}
+tab2 <- table(Bd_Ato_Criador$ID,Bd_Ato_Criador$V3)
+pilltabs(tab2, count = FALSE, rows = TRUE, cols = FALSE, chisq = FALSE,
+resid = FALSE, row.names = TRUE)
+```
+
+
+### Qual é a sua opinião a respeito da intervenção/espetáculo de hoje?
+
+Alguns encontros foram além da realização de palestras e debates e contaram também com apresentações artísticas. Em função disso, foi pedido aos entrevistados uma avaliação sobre a intervenção/espetáculo daquele dia. De uma forma geral, 93,75% dos entrevistados consideraram **boa** ou **ótima** conforme gráfico abaixo.
+
+```{r , echo=FALSE}
+contagem3 = table(Bd_Ato_Criador$V5)
+porcent3 = round(contagem3/sum(contagem3)*100,2)
+rotulo3=paste(" (",porcent3,"%",")",sep="")
+bp3<-barplot(table(Bd_Ato_Criador$V5), ylab="Frequência",col="darkgreen", main="Gráfico 3 - Qual é a sua opinião a respeito da \n intervenção/espetáculo de hoje?")
+text(bp3, 0, rotulo3,cex=1,pos=3) 
+
+```
+
+*Clique no botão Rows % para ver a tabela.*
+
+#### Tabela 3 - Qual é a sua opinião a respeito da intervenção/espetáculo de hoje?
+```{r, echo=FALSE,results='asis',message=FALSE}
+tab3 <- table(Bd_Ato_Criador$ID,Bd_Ato_Criador$V5)
+pilltabs(tab3, count = FALSE, rows = TRUE, cols = FALSE, chisq = FALSE,
+resid = FALSE, row.names = TRUE)
+```
+
+### Dê uma nota de zero (pior) a dez (melhor) para o Ciclo Ato Criador Outros Possíveis
+
+No gráfico abaixo, podemos ver a avaliação do **Ciclo Ato Criador Outros Possíveis** em uma nota de zero (pior) a dez (melhor). As maiores notas médias foram para as mesas *Atitude*, com o escore de  9,76 (lembrando que o máximo=10,00), e *De Prometeu a Frankenstein*, com o escore médio de 9,72. Apesar de ainda ser um valor alto, a mesa com menor escore foi *Outras Narrativas* com o valor de 8,33. Cumpre registrar que o intervalo com 95% de confiança é pequeno o que indica pouca variabilidade e, consequentemente, alta confiabilidade dos resultados obtidos. 
+
+#### Avaliação média (nota de zero a dez) do Ciclo Ato Criador Outros Possíveis e intervalo de 95% de confiança
+```{r, echo=FALSE,results='asis',message=FALSE}
+## Fonte: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+library(doBy)
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+nota2<-NA
+nota2$ID<-(Bd_Ato_Criador$ID)
+nota2$Nota<-(Bd_Ato_Criador$V9)
+nota2<-data.frame(nota2)
+nota2<-data.frame(nota2[,2:3])
+nota2<-na.omit(nota2)
+resumonota <- summaryBy(Nota ~ ID, data=nota2, FUN=c(mean,sd,length))
+resumonota$SE<-(resumonota$Nota.sd/sqrt(resumonota$Nota.length))
+resumonota$LI<-(resumonota$Nota.mean-1.96*resumonota$SE)
+resumonota$LS<-(resumonota$Nota.mean+1.96*resumonota$SE)
+resumonota$Nota.mean<-round(resumonota$Nota.mean,2)
+pd <- position_dodge(0.1) # move them .05 to the left and right
+p2<-ggplot(resumonota, aes(x=ID, y=Nota.mean),group=ID) + 
+  geom_errorbar(aes(ymin=LI, ymax=LS), width=.75, color="#0564a8", size=1,position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3, shape=21, fill="#0564a8")+
+  geom_label_repel(aes(x=ID, y=Nota.mean, fill = "#9C2A00",label = Nota.mean), size = 3, fontface = 'bold', color = 'white',box.padding = unit(0.35, "lines")) +
+  ylim(0, 10.3)+
+  xlab("Encontros") +
+  ylab("Avaliação média") 
+# + ggtitle("Avaliação média (nota de zero a dez) do Ciclo Ato Criador e intervalo de 95% de confiança") 
+p2 + theme(panel.background = element_rect(fill = "#FFFBD0", colour ="#9C2A00"), panel.grid.major = element_line(colour = "#D6BF86"), panel.grid.minor=element_line(colour = "#D6BF86"),axis.text.x=element_text(angle = -90, hjust = 0),legend.position="none")
+
+```
+
+
+### Você gostaria de ser informado e participar da mala direta do Ciclo Ato Criador Outros Possíveis?
+
+A cada 100 pessoas que participaram do **Ciclo Ato Criador Outros Possíveis**, 85 informaram que gostariam de voltar para assistir outra palestra e apenas 15 não concordaram em participar da mala direta, conforme o gráfico abaixo.
+
+```{r, echo=FALSE,results='asis',message=FALSE}
+library(ggplot2)
+library(waffle)
+library(magrittr)
+#devtools::install_github("timelyportfolio/rcdimple")
+library(rcdimple)
+source("https://gist.githubusercontent.com/timelyportfolio/91e0b8c2b8cd4202baa2/raw/37663bf3de2168157e7f0c26a14422007ab843e8/as_rcdimple.R")
+
+professional <- c(`NÃO (15%)`=15, `SIM (85%)`=85)
+waffle(professional, rows = 10, colors = c("#969696", "#009bda")) %>%
+  as_rcdimple(height = 375, width = 1000 ) %>%
+  add_legend( x = "0%", width = "100%", orderRule = "professional")
+
+```
+
+###  Você voltaria para outro evento do Ciclo Ato Criador Outros Possíveis?
+O sucesso de um evento pode ser mensurado diretamente pela vontade do entrevistado de retornar para outro encontro. Se as pessoas respondem que estão motivadas a retornar ao evento, pode-se dizer que a experiência foi positiva. Desse modo, quando perguntados se voltariam para outro evento do Ciclo Ato Criador Outros Possíveis, 98,6% dos entrevistados afirmaram que Sim, conforme gráfico abaixo. 
+
+```{r ,  echo=FALSE,results='asis',message=FALSE}
+library(plotly)
+a<-data.frame(table(Bd_Ato_Criador$V7))
+p <- plot_ly() %>%
+  add_pie(data = a, labels = ~levels(Bd_Ato_Criador$V7), values = ~a,
+          textposition = 'inside',
+          textinfo = 'label+percent',
+          hoverinfo = 'label+percent',
+          name = "Você voltaria para outro evento do Ciclo Ato Criador: Outros Possíveis", hole = 0.3) 
+p 
+
+```
+
+###  Como você ficou sabendo do evento de hoje?
+Sobre os meios de comunicação. Sete veículos - do tradicional Boca-a-boca ao Facebook, incluindo propaganda em Jornal, em Revistas, Folder/filipetas, Site, E-mail, e Twetter - foram analisados. No topo da lista não há muita novidade. A recomendação de pessoas conhecidas, foi o meio que obteve a maior utilização. Em nossa pesquisa, 229 entrevistados disseram que tomaram conhecimento do evento pelo **boca-a-boca**. Essa categoria é tão grande que ficou duas vezes maior que a segunda posição, que é o Facebook com 104 entrevistados. Mesmo em tempos em que existe um avanço da tecnologia, a recomendação de outras pessoas ainda é um veículo que merece ser observado.
+
+```{r ,  echo=FALSE,results='asis',message=FALSE}
+
+V8a<-data.frame(table(Bd_Ato_Criador$V8a))
+V8b<-data.frame(table(Bd_Ato_Criador$V8b))
+V8c<-data.frame(table(Bd_Ato_Criador$V8c))
+V8d<-data.frame(table(Bd_Ato_Criador$V8d))
+V8e<-data.frame(table(Bd_Ato_Criador$V8e))
+V8f<-data.frame(table(Bd_Ato_Criador$V8f))
+V8h<-data.frame(table(Bd_Ato_Criador$V8h))
+V8<-rbind(V8d,V8f,V8b,V8a,V8e,V8c,V8h)
+row_to_keep = c(FALSE, TRUE, FALSE, TRUE, FALSE, TRUE,FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)
+V8 = V8[row_to_keep,]
+colnames(V8) <- c("Veiculo","Freq")
+
+b <- plot_ly(data=V8, x = ~Freq, y = ~Veiculo, type = 'bar', orientation = 'h',
+             marker = list(color = 'rgba(1, 82, 107, 0.8)',
+                           line = list(color = 'rgb(203, 229, 237)', width = 1))) %>%
+  layout(paper_bgcolor = 'rgb(203, 229, 237)', plot_bgcolor = 'rgb(203, 229, 237)',
+         margin = list(l = 320, r = 2, t = 70, b = 80),
+         showlegend = FALSE,
+         hidesources=TRUE,
+         hovermode = 'label+percent',
+         title = "Como você ficou sabendo do evento de hoje?") 
+b
+
+```
+
+
+### Indicadores de avaliação do Ciclo Ato Criador Outros Possíveis
+#### Análise das perguntas
+#### *Você pretende retornar ao ciclo nos próximos meses?* e 
+#### *Você recomendaria os próximos eventos aos seus amigos?*
+
+Nos próximos gráficos, podemos ver dois indicadores de avaliação do **Ciclo Ato Criador Outros Possíveis**. No primeiro gráfico, podemos ver que quando perguntados se: *Você pretende retornar ao ciclo nos próximos meses?* 50,5% disseram que *certamente que sim*. Já no que se refere à pergunta:*Você recomendaria os próximos eventos aos seus amigos?* Podemos ver que 70,6% dos entrevistados responderam que *certamente que Sim*.  
+*Escolha o item na caixa à esquerda para acessar os gráficos*. 
+
+```{r ,  echo=FALSE,results='asis',message=FALSE}
+# PIZZAS LADO A LADO
+#q <- plot_ly() %>%
+#  add_pie(data = table(Bd_Ato_Criador$V10), labels = ~levels(Bd_Ato_Criador$V10), values = ~n,
+#          textposition = 'inside',
+#          textinfo = 'label+percent',
+#          hoverinfo = 'label+percent',
+#          name = "Você pretende retornar ao ciclo nos próximos meses?", domain = list(x = c(0, 0.45), y = c(0, 1))) %>%
+#  add_pie(data = table(Bd_Ato_Criador$V11), labels = ~levels(Bd_Ato_Criador$V11), values = ~n,
+#          textposition = 'inside',
+#          textinfo = 'label+percent',
+#          hoverinfo = 'label+percent',
+#          name = "Você recomendaria os próximos eventos aos seus amigos?", domain = list(x = c(0.55, 1), y = c(0, 1))) %>%  
+#  layout(title = "Indicadores de avaliação", showlegend = T,
+#         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+#         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+#q
+
+Va<-data.frame(table(Bd_Ato_Criador$V10))
+Vb<-data.frame(table(Bd_Ato_Criador$V11))
+colnames(Va) <- c(".","Freq")
+colnames(Vb) <- c(".","Freq")
+
+# configurando a margem
+m <- list(
+  l = 50,
+  r = 50,
+  b = 150,
+  t = 50,
+  pad = 4
+)
+
+# LADO A LADO
+#v10b <- plot_ly(data=Va, x = ~Classe, y = ~Freq, type = 'bar', orientation = 'v') %>%
+#layout(showlegend = FALSE,
+#       hidesources=TRUE,
+#       hovermode = 'label+percent') 
+#v11b <- plot_ly(data=Vb, x = ~Classe, y = ~Freq, type = 'bar', orientation = 'v') %>%
+#layout(showlegend = FALSE,
+#         hidesources=TRUE,
+#         hovermode = 'label+percent')              
+#v10bev11b <- subplot(v10b, v11b)
+#v10bev11b
+
+# CAIXA DE LISTAGEM
+listagem <- plot_ly() %>%
+  add_trace(data=Va, x = ~., y = ~Freq, type = 'bar', orientation = 'v', marker = list(color = 'rgb(25,25,112)')) %>%
+  add_trace(data=Vb, x = ~., y = ~Freq, type = 'bar', orientation = 'v', marker = list(color = 'rgb(0,100,0)'),visible = F) %>%
+  layout(
+#    title = "Você pretende retornar ao ciclo nos próximos meses? & Você recomendaria os próximos eventos aos seus #amigos?",
+    showlegend = FALSE,
+    hidesources=TRUE,
+    hovermode = 'label+percent',
+    autosize = F, width = 800, height = 500, margin = m,
+    xaxis = list(domain = c(0.1, 1)),
+    yaxis = list(title = "Frequência"),
+    updatemenus = list(
+      list(
+        y = 0.7,
+        buttons = list(
+          list(method = "restyle",
+               args = list("visible", list(TRUE, FALSE)),
+               label = "Retornaria ao ciclo"),
+          list(method = "restyle",
+               args = list("visible", list(FALSE, TRUE)),
+               label = "Recomendaria o ciclo")))
+    )
+  )
+listagem
+```
+
+
+## Nuvem de palavras 
+A partir das respostas à pergunta *Qual a sua área de atuação?*, foi possível construir uma nuvem de palavras com as áreas mais frequentes.
+
+Nuvem de palavras (*wordcloud*) é um gráfico que mostra a frequência de utilização das palavras. Quanto mais a palavra é utilizada, mais chamativa é a representação dessa palavra no gráfico. As palavras aparecem em fontes de vários tamanhos e em diferentes cores, indicando o que é mais relevante e o que é menos relevante no contexto. 
+
+As áreas de atuação com maiores frequências são vinculadas à Educação, Música e Psicologia. 
+
+```{r, echo=FALSE,results='asis',message=FALSE}
+
+library(wordcloud2)
+wordcloud2(Bd_wordcloud,shape='star')
+```
+
+#### Qual é a sua opinião a respeito do espaço do evento?
+
+Sobre a Avaliação do espaços dos eventos, 92,2% dos entrevistados consideraram o local **bom** ou **ótimo**. Pode-se inferir que os espaços utilizados foram adequados para a realização dos eventos.
+
+```{r , echo=FALSE}
+contagem4 = table(Bd_Ato_Criador$V6)
+porcent4 = round(contagem4/sum(contagem4)*100,2)
+rotulo4=paste(" (",porcent4,"%",")",sep="")
+bp4<-barplot(table(Bd_Ato_Criador$V6), ylab="Frequência",col="orange2", main="Gráfico 4 - Qual é a sua opinião a respeito do espaço do evento?")
+text(bp4, 0, rotulo4,cex=1,pos=3) 
+
+```
+
+Cumpre registrar que 30% dos entrevistados da mesa *Desafios da Amazônia no século XXI* consideraram o espaço ruim. Investigando o motivo deste destaque negativo, percebe-se que o evento aconteceu em Niteroí em uma tenda construída no jardim da Reitoria da UFF. Infelizmente, nesse dia as condições climáticas (o vento) atrapalharam a realização da mesa. Clique no botão Rows % para ver a tabela.
+
+#### Tabela 4 - Qual é a sua opinião a respeito do espaço do evento?
+```{r, echo=FALSE,results='asis',message=FALSE}
+tab4 <- table(Bd_Ato_Criador$ID,Bd_Ato_Criador$V6)
+pilltabs(tab4, count = FALSE, rows = TRUE, cols = FALSE, chisq = FALSE,
+resid = FALSE, row.names = TRUE)
+
+```
+
+### Perfil sociodemográfico: Idade média dos participantes
+
+No gráfico abaixo podemos ver a idade média dos participantes. Os eventos 
+*Que novos atores políticos?* e *Corpos Fluídos* obtiveram as maiores idades médias com 53 e 52 anos, respectivamente, enquanto os eventos *Descolonização das Expressões* e *Outra Democracia RJ* foram os encontros que contaram com o público mais jovem com idades médias entre 27 e 28 anos. Já o evento *A Escola é o Mundo* apresentou a maior diversidade de idades.
+
+```{r, echo=FALSE,results='asis',message=FALSE}
+Idade2<-NA
+Idade2$ID<-(Bd_Ato_Criador$ID)
+Idade2$Idade<-(Bd_Ato_Criador$Idade)
+Idade2<-data.frame(Idade2)
+#dim(Idade2)
+#head(Idade2)
+Idade2<-data.frame(Idade2[,2:3])
+Idade2<-na.omit(Idade2)
+resumo <- summaryBy(Idade ~ ID, data=Idade2, FUN=c(mean,sd,length))
+
+polygon_plot = resumo %>% 
+  ggplot(aes(x=ID, y=Idade.mean, group=1)) + 
+  geom_polygon(color ="#0564a8", fill=NA)+
+  ylab("Idade média") +
+  ggtitle("Idade média dos participantes")
+print(polygon_plot + coord_polar())
+
+```
+
+As mulheres representam a maioria dos participantes do Ciclo Ato Criador Outros Possíveis. A cada 100 participantes dos eventos, 64 pessoas eram do gênero feminino. De forma complementar, 36 pessoas eram do gênero masculino.
+
+```{r, echo=FALSE,results='asis',message=FALSE}
+Sexo <- c(`Masculino (36%)`=36, `Feminino (64%)`=64)
+waffle(Sexo, rows=10, size=0.5, title = "Gráfico - Sexo dos participantes", colors=c("Blue", "red"))
+```
+
+
+## Qual a sua contribuição para transformar o mundo? Que outros possíveis?
+
+A pergunta final do questionário foi "livre" com base nos objetivos da pesquisa:*Qual a sua contribuição para transformar o mundo? Que outros possíveis?*.A partir das respostas dadas pelos respondentes, foram elaboradas 6 categorias, são elas:  
+1. Categoria 1  - Diálogo e Empatia  
+2. Categoria 2  - Desenvolvimento pessoal  
+3. Categoria 3  - Buscando a resposta  
+4. Categoria 4  - Meu ofício e ação  
+5. Categoria 5  - Educação,Cultura e Arte  
+6. Categoria 6  - Militância  
+
+### Análise das respostas
+
+#### **Categoria 1  - Diálogo e Empatia**
+
+Nesta categoria foram incluídos todos os discursos que expressaram uma vontade de estabelecer trocas, diálogos e  empatia. Os discursos acerca desses conceitos apresenta grande abertura para o outro. A seguir apresentamos as respostas.   
+
+* FAZER O BEM, TRABALHAR COM O AMOR AO PRÓXIMO!
+* ESTAR ATENTO SEMPRE E DIALOGAR SEMPRE COM TODOS.
+* SER VOLUNTÁRIO COMO EDUCADOR.
+* PROCURAR AUXILIAR O PROXIMO.
+* CRIAR GRUPOS DE DISCUSSÃO DOS DIVERSOS TEMAS E PENSAR SOLUÇÕES MAIS CONCRETAS PARA GERAR UMA PRÁTICA MAIS DIALÓGICA E ABRANGENTE.
+* TRANSMITIR INFORMAÇÃO - TENTAR LEVAR INFORMAÇÃO PARA A COMUNIDADE, INSTRUIR OS JOVENS À DIGNIDADE E CULTURA SOCIAL.
+* OUVIR. TROCAR.
+* TROCAR DE CULTURA COM REVOLUÇÃO ATRAVÉS DA PALAVRA.
+* COMPROMETIMENTO E ESPERANÇA.
+* FAÇO 30 HORAS MENSAIS DE TRABALHO VOLUNTÁRIO, VOU NA CASA DAS PESSOAS E ENSINO A BÍBLIA E O ALFABETO.
+* AMOR AO PRÓXIMO.
+* MAIS PARTICIPAÇÃO E DIÁLOGO. MAIS APROXIMAÇÃO E RESPEITO. É POSSÍVEL CONSTRUIR.
+* FIRMAR NO AMOR.
+* RESPEITAR AS PESSOAS.
+* FAZENDO O BEM E RESPEITANDO A CULTURA DE TODOS.
+* COMPARTILHAR SABERES, RESPEITAR OS OUTROS, PLANTAR AMOR.
+* TER MAIS UNIÃO E AMOR.
+* ESPALHAR AMOR!
+* EM MEIO A UMA CIDADE QUE SOFRE POR PERDA DE VALORIZAÇÃO DA CULTURA, DEVEMOS PRIMEIRAMENTE, ACREDITAR EM NOSSA CAPACIDADE EM TRANSMITIR TODO UM LADO BOM PARA A SOCIEDADE.
+* SOU VOLUNTÁRIA EM UMA BIBLIOTECA. PARTICIPO DE RODAS DE LEITURA. PROCURO ESTAR ATENTA E FORTE, NÃO TENHO TEMPO DE TEMER A MORTE. 
+* ACHO QUE NOSSO ATAQUE DEVERIA SER A MÍDIA. 
+* AJUDAR CRIANÇAS E ADOLESCENTES A SEREM CRIATIVAS E CRÍTICAS!
+* AJUDAR O PRÓXIMO.
+* SEMPRE QUE POSSO PROCURO AJUDAR AS PESSOAS NA RUA.
+
+#### **Categoria 2  - Crescimento pessoal**
+
+Diferentes participantes ressaltam a importância do desenvolvimento pessoal como sua contribuição para transformar o mundo. A seguir apresentamos as respostas.   
+
+* SER UMA PESSOA MELHOR, PASSAR ALEGRIA E AMOR.
+* PRODUZIR COM RESPONDABILIDADE.
+* PASSAR VALORES À NOVA GERAÇÃO, VALORES PESSOAIS DOS QUAIS MEU FILHO COMPARTILHE!
+* BUSCAR POR CONHECIMENTO PARA PENSAR "FORA DA CAIXA".
+* REFLETINDO, OLHANDO, CRITICANDO, OUSANDO ... VIVENDO!
+* ME INTERESSO POR TUDO QUE TRANSFORMA AS PESSOAS!
+* MANTER A ESPERANÇA!
+* COMPARTILHAR!
+* BUSCAR CONHECIMENTO!
+* MANTER-ME ÍNTEGRA.
+* TRABALHAR COM FERRAMENTAS DE MUDANÇA.
+* POSIÇÃO CRÍTICA E ÉTICA NO MEU COTIDIANO.
+* NÃO DESTRUIR AS ÁRVORES.    
+
+#### **Categoria 3  - Buscando a resposta **
+
+O terceiro elemento identificado a partir dos discursos é representado pelas pessoas que ainda estão buscando a resposta.   
+
+* AINDA ESTOU TENTANDO ME MELHORAR, MEUS OUTROS POSSÍVEIS, NESSE PROCESSO ENVOLVEM VÁRIAS DIMENSÕES,(PROFISSIONAL, SOCIAL, ESPIRITUAL), VOU CONTAGIANDO O MUNDO E DEIXANDO ME CONTAGIAR POR ELE.
+* NÃO SEI. NÃO GASTAR ENERGIA AJUDA?!
+* ESTOU DESCOBRINDO!
+* DESENVOLVER!
+* QUERENDO ENTENDER AINDA!
+* CONTROL+ALT+DEL
+* SOBREVIVO
+
+#### **Categoria 4  - Meu ofício e ação**
+
+O próximo elemento identificado é relacionado ao trabalho e à ação em geral.   
+
+* ATRAVÉS DA TROCA E PRODUÇÃO DE INFORMAÇÃO.
+* NO MEU TRABALHO ATUO NA ÁREA CORPORAL E USO O CORPO COMO CAMPO DE TRANSFORMAÇÃO.
+* MEU TRABALHO NA SAÚDE PÚBLICA E EDUCAÇÃO.
+* MINHA CONDUTA É PELA VISÃO QUE PASSO DO MUNDO AO MEU REDOR ATRAVÉS DA FOTOGRAFIA.
+* SOU UMA PROPAGADORA DA CULTURA FOTOGRÁFICA, ATRAVÉS DO MEU TRABALHO AUTORAL.
+* SOU ESCRITORA E AJUDO A MUDAR A MENTALIDADE DAS PESSOAS COM AS MINHAS IDÉIAS.
+* TRABALHOS A SEREM ESTUDADOS NAS COMUNIDADES, COMO LEITURA, TEATRO, ETC.
+* TRABALHO COM EMPRESAS DE MODA!
+* ACÃO SOCIAL JUNTO À COMUNIDADE MAIS DESPRIVILEGIADA DO BAIRRO ONDE VIVO, PARTICULARMENTE A POPULAÇÃO DE RUA!
+* SOU PROFESSORA E DESENVOLVO DIÁLOGOS CRÍTICOS COM MEUS ALUNOS!
+* SOU PROFESSORA E SEMPRE ME ATUALIZO EM CICLOS COMO ESTE.
+
+#### **Categoria 5  - Educação,Cultura e Arte**
+* EDUCAÇÃO.
+* DEFENDER A CULTURA DA DIVERSIDADE! 
+* VIM AO EVENTO SEM QUERER.
+* CRÍTICA DA ACADEMIA FEDERAL.
+* TRABALHO COM FORMAÇÃO DOCENTE NA PERSPECTIVA DO SENSÍVEL!
+* SOU PROFESSORA/MEDIADORA/
+* A EDUCAÇÃO É A BASE DO PENSAMENTO CRÍTICO.
+* PELA EDUCACAO E CULTURA, TRANSMITINDO OUTROS VALORES PARA OS DISCENTES. SÃO OUTROS POSSÍVEIS. 
+* EDUCAÇÃO.
+* EDUCAR, OUVIR E AGIR!
+* ESTOU ESTUDANDO SOBRE A CULTURA E SOBRE COMO O MUNDO QUE EXISTE É PRÉ-FABRICADO ANTES DE SER EXECUTADO. ACREDITO QUE ANALISAR ESTE ASPECTO SIMBÓLICO NOS AJUDA A CONSTRUIR E PENSAR OUTRAS FORMAS POSSÍVEIS DE DESENVOLVIMENTO.
+* ARTE, ARTE E MAIS ARTE!!! ARTE AMPLIA A VIDA, DÁ SENTIDO À EXISTÊNCIA HUMANA!
+* ARTE!
+
+#### **Categoria 6  - Militância**
+
+Chega-se, por fim, à última categoria de análise percebida nas respostas. Observam os respondentes que é necessário uma ação vinculada à militância e à luta.  
+
+* MILITANTE DAS CAUSAS SOCIALISTAS, SOLIDÁRIA, ÉTICA, NÃO COMUNISTA, NÃO RACISTA.
+* CONTINUO ACREDITANDO QUE SÓ A LUTA TRANSFORMA A SOCIEDADE.
+* RESPEITO!!!
+* CRIAR UM CICLO SOBRE AFRORELIGIOSIDADE NO BRASIL, JÁ QUE TEMOS UMA DIVERSIDADE MUITO GRANDE.
+* NAS COMUNIDADES PROMOVENDO A LEITURA COMO AQUISIÇÃO DA PALAVRA.  
+
+#### Referências
+1. BARDIN, Laurence. *Análise de conteúdo*. São Paulo: Edições 70, 2011, 229 p.  
+2. DELLAGNEO, Eloise Helena Livramento e SILVA, Rosimeri Carvalho. *Análise de conteúdo e sua aplicação em pesquisa na administração*. Pesquisa Qualitativa em Administração: Teoria e Prática. Rio de Janeiro: FGV, 2005, p. 97-118
+4. DUTT-ROSS, Steven *Visualização de Dados - Uma Análise dos dados da Copa do Mundo de 2014*. UNIRIO, mimeo.
+3. R Core Team (2016). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.  URL https://www.R-project.org/.
+
+
+## Para maiores informações, clique para acessar o [site do Ciclo Ato Criador Outros Possíveis](https://atocriador2016.wordpress.com/mostra-outros-possiveis-2016/)
+
+
+![](https://scontent.fgig4-1.fna.fbcdn.net/v/t31.0-8/14939359_317508365303101_7493091558306571643_o.jpg?oh=f5bef515b3eb9863280ee73c63c59f0a&oe=59EB827B)
