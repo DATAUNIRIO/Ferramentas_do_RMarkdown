@@ -1,0 +1,126 @@
+---
+title: "Hello R Markdown"
+author: "[Prof. Steven Dutt-Ross](https://dataunirio.github.io/)"
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+output:
+  html_document:
+    theme:
+       bootswatch: journal
+       bg: "#301934"
+       fg: "#DFFF00"
+       primary: "#ED79F9"
+       heading_font: 
+         google: Sen
+       base_font:
+         google: Sen
+       code_font:
+         google: JetBrains Mono
+    code_folding: hide             
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE, warning = FALSE,comment = NA)
+
+# output:
+#   html_document:
+#     theme:
+#       bg: "#101010"
+#       fg: "#FDF7F7"
+#        primary: "#FFBF00"
+#        base_font:
+#          google: "Prompt"
+#        code_font:
+#          google: "JetBrains Mono"               
+
+```
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r,eval=FALSE}
+# ---
+# title: "Hello R Markdown"
+# author: "[Prof. Steven Dutt-Ross](https://dataunirio.github.io/)"
+# categories: ["R"]
+# tags: ["R Markdown", "plot", "regression"]
+# output:
+#   html_document:
+#     theme:
+#        bootswatch: journal
+#        bg: "#301934"
+#        fg: "#DFFF00"
+#        primary: "#ED79F9"
+#        heading_font: 
+#          google: Sen
+#        base_font:
+#          google: Sen
+#        code_font:
+#          google: JetBrains Mono
+#   toc: true
+#   toc_float: true
+#   code_folding: hide             
+#---
+#knitr::opts_chunk$set(echo = TRUE,message = FALSE, warning = FALSE,comment = NA)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=TRUE}
+# devtools::install_github("djnavarro/bs4cards")
+library(bs4cards)
+kitties_with_footers <- list(
+  card(
+  title = "A kitten card",
+  image = "https://placekitten.com/300/200",
+  text = "The image at the top of this card is from placekitten.com. It's very cute",
+  header = "Header",
+  footer = "Kitten A"),
+  card(
+  title = "A kitten card",
+  image = "https://placekitten.com/300/200",
+  text = "The image at the top of this card is from placekitten.com. It's very cute",
+  header = "Header",footer = "Kitten B"), 
+  sample_card(footer = "Kitten C")
+) 
+card_grid(kitties_with_footers)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r, echo=TRUE}
+
+library(bs4cards)
+slides <- list(
+  
+  card(
+    title = "Starting R markdown",
+    image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+    link = "https://slides.djnavarro.net/starting-rmarkdown",
+    text = "An introduction to R markdown. The target audience is a novice R user with no previous experience with markdown."
+  ),
+  
+  card(
+    title = "Starting ggplot2",
+    image = "https://slides.djnavarro.net/index_img/starting-ggplot2.png",
+    link = "https://slides.djnavarro.net/starting-ggplot2",
+    text = "An introduction to ggplot2. The target audience is a novice user with no previous experience with R or ggplot2."
+  ),
+  
+  card(
+    title = "Starting programming",
+    image = "https://slides.djnavarro.net/index_img/starting-programming.png",
+    link = "https://slides.djnavarro.net/starting-programming",
+    text = "This is primarily a tutorial on making generative art in R, but in doing so introduces core programming constructs and data structures. It is assumed the user has some previous experience with ggplot2."
+  )
+)
+card_grid(slides)
+```
+
+The goal of bs4cards is to make this task a little easier inside an R markdown document or website. 

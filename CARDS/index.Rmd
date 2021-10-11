@@ -1,0 +1,82 @@
+---
+title: "Hello R Markdown"
+author: "[Prof. Steven Dutt-Ross](https://dataunirio.github.io/)"
+categories: ["R","shiny","RMarkdown"]
+tags: ["R","shiny","RMarkdown"]
+output:
+  html_document:
+    theme:
+       bootswatch: journal
+       bg: "#301934"
+       fg: "#DFFF00"
+       primary: "#ED79F9"
+       heading_font: 
+         google: Sen
+       base_font:
+         google: Sen
+       code_font:
+         google: JetBrains Mono
+    code_folding: hide             
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE, warning = FALSE,comment = NA)
+
+library(bs4cards)
+
+```
+
+# Aplicativos
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+
+
+```{r}
+slides <- list(
+   bs4cards::card(
+     title = "Site do prof Steven Ross",
+     image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+     link =  "https://steven.metodosquantitativos.com/",
+     text =  "Site pessoal do prof. Steven Dutt-Ross",
+     header = "Site",
+     footer = " "),
+   bs4cards::card(
+      title = "Qual a diferença entre a média e a mediana?",
+      image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+      link =  "https://dataunirio.uniriotec.br/shiny/mediamediana/",
+      text = "Aqui vamos perceber a diferença entre a média e a mediana em distribuições simétricas, assimétricas e bi-modais",
+      header = "Média e Mediana",
+      footer = "Medidas de posição"),
+   bs4cards::card(
+     title = "Guia de teste de hipóteses no R",
+     image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+     link =  "https://livro.metodosquantitativos.com/docs/",
+     text =  "Esse é um manual simplificado para análise de dados no R. Desenvolvido para alunos(as)",
+     header = "web-book",
+     footer = "livro web")
+)
+
+card_grid(slides)
+
+```
+
+
+```{r}
+slides <- list(
+    card(
+      title = "O que você faria para melhorar o curso/palestra?",
+      image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+      link  = "https://dataunirio.uniriotec.br/shiny/perguntas/",
+      text  = "Espaço para fazer perguntas, comentários, reclamações e tirar dúvidas. Escreva o quanto quiser.",
+      header = "Feedback aula",footer = "Avaliação do curso"), 
+    card(
+      title = "Mostrar perguntas",
+      image = "https://slides.djnavarro.net/index_img/starting-rmarkdown.png",
+      link =  "https://dataunirio.uniriotec.br/shiny/perguntas_mostrar/",
+      text = "aplicativo para ser utilizado em conjunto com o 'perguntas'",
+      header = "Mostrar feedback", footer = "Avaliação do curso") 
+  ) 
+card_grid(slides)
+```
+

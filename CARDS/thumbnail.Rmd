@@ -1,0 +1,68 @@
+---
+title: "AAA de Estatística"
+subtitle: "**Conheça os seus dados**"
+author: "[Prof. Steven Dutt-Ross](https://steven.metodosquantitativos.com/)"
+categories: ["aulas", "estatística", "banco de dados"]
+tags: ["aulas", "estatística", "banco de dados"]
+output: 
+  html_document:
+     self_contained: no
+     theme: cosmo
+     highlight: textmate
+summary: 'Aulas de Estatística do prof. Steven Dutt-Ross.'     
+---
+
+<head>
+<style>
+body {
+    background-color: #fffcd9;
+}
+
+.list-group-item.active, .list-group-item.active:hover,
+.list-group-item.active:focus {
+    z-index: 2;
+    color: #ffffff;
+    background-color: #00334a;
+    border-color: #dddddd;
+}
+
+.verde { 
+  color:#fff;
+  background-color:#00334a; 
+  border-radius: 5px; 
+  padding: 20px;
+}
+a:link {
+    color: black;
+}
+
+/* visited link */
+a:visited {
+    color: black;
+}
+
+</style>
+</head>
+
+<br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+source("utils.R")
+```
+
+# Aqui você vai encontrar as aulas de Estatística
+
+```{r, echo=FALSE}
+#janelas()
+janelas(showcaseOnly = TRUE)
+
+```
+
+<div class = "verde">
+
+###  **Inteligência Estatística: conheça os seus dados**
+
+</div> 
+<br>
+
