@@ -1,0 +1,321 @@
+---
+title: ESTUDO COMPARATIVO ENTRE PERT/CPM E CORRENTE CRÍTICA
+author: "
+  Marcos Motta Nazareth^[Universidade Federal Fluminense, marcosmon@ig.com.br],
+  Luiz Carlos Brasil de Brito Mello^[Universidade Federal Fluminense, luiz.brasil@gmail.com],
+  Paulo Roberto Chakour^[Goldratt Associados, paulo.chakour@goldratt.com.br]"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<style> body {text-align: justify} </style>
+<h3 id="intro">1. Introdução</h3>
+
+<a href="#FISCHER">Fischer</a> (2007) afirma que os homens não sabem por algum instinto inato fazer ferramentas e usá-las; precisam aprender através da experiência, do ensaio e do erro. <a href="#MARCANTONIO">Marcantonio</a> (2010) ressalta que as civilizações gerenciam projetos desde o início dos tempos, construindo moradias ou cultivando alimentos. Atualmente existem várias metodologias para gerenciar projetos. <br>
+
+Este estudo tem como objetivo apresentar algumas das vantagens e desvantagens de uma das técnicas utilizadas na atualidade, a Corrente Crítica em comparação com a utilização tradicional do PERT/CPM.<br>
+
+Além da introdução, o texto apresenta mais 05 seções: a segunda expõe a fundamentação teórica subdividida em gerenciamento de projetos, a técnica PERT/CPM, a teoria das restrições e a corrente crítica; a terceira apresenta a comparação entre a técnica PERT/CPM e a Corrente Crítica, subdividida em modelos comparativos, interpretação de resultados e um resumo comparativo; na quarta são apresentadas as considerações finais; na última as limitações deste estudo. <br>
+
+<h3 id="FunTeo">2. Fundamentação teórica </h3>
+<h4 id="Gerpro">2.1. Gerenciamento de projetos</h4>
+Para <a href="#GOLDRATT98">Goldratt</a> (1998) projetos são “um conjunto de atividades que tem como finalidade atingir um objetivo específico e tem começo, meio e fim bem definidos”. Em sua última revisão, o <a href="#PMBOK">PMBOK</a> (2013), define com gerência de projetos sendo a aplicação de conhecimentos, habilidades e técnicas para projetar atividades que visem atingir requisitos definidos; e que esta é realizada através da aplicação e integração apropriadas dos 47 processos de gerenciamento de projetos, logicamente agrupados em cinco grupos de processos. Esses cinco grupos de processos são: <br>
+
+
+- Iniciação: São os processos executados para definir um novo projeto ou uma nova fase de um projeto existente através da obtenção de autorização para iniciar o projeto ou fase.<br>
+- Planejamento: São os processos necessários para definir o escopo do projeto, refinar os objetivos e definir a linha de ação necessária para alcançar os objetivos para os quais o projeto foi criado.<br>
+- Execução: São os processos realizados para executar o trabalho definido no plano de gerenciamento do projeto para satisfazer as especificações do projeto.<br>
+- Monitoramento e controle: São os processos exigidos para acompanhar, analisar e controlar o progresso e desempenho do projeto, identificar quaisquer áreas nas quais serão necessárias mudanças no plano, e iniciar as mudanças correspondentes. <br>
+- Encerramento: São os processos executados para finalizar todas as atividades de todos os grupos de processos, visando encerrar formalmente o projeto ou fase.<br>
+
+
+Segundo <a href="#PMBOK">PMBOK</a>" (2013), podemos desdobrar o projeto em três linhas de base para o planejamento: Escopo, Custos e Cronograma; este último para um melhor entendimento do estudo, desdobrado a seguir:<br>
+
+
+- Definição das atividades: Ao definir as atividades, identificam-se quais ações serão executadas, quem são os responsáveis e quais os recursos serão utilizados.<br>
+- Sequenciamento das atividades: Nesta fase é possível vislumbrar as inter-relações das atividades.<br>
+- Estimar os recursos das atividades: Neste processo definem-se os recursos que estarão envolvidos diretamente com a execução dos trabalhos da atividade.<br>
+- Estimativa da duração das atividades: Com as atividades possuindo estimativa de duração, torna-se possível estimar a duração do projeto.<br>
+- Desenvolver o cronograma: Neste processo é elaborado o cronograma e linha de base de tempo do projeto.<br>
+
+“Atualmente, observa-se dificuldade em atender simultaneamente o prazo, o escopo e o orçamento dos projetos. Os projetos finalizados, geralmente, não conseguem alcançar totalmente o escopo, ou terminarem na data determinada, ou no orçamento estipulado” (CAVALVANTI,2011)<br>
+
+<h4 id="TecPert">2.2. A técnica PERT/CPM</h4>
+
+A mais utilizada das ferramentas na elaboração das redes de precedência, o PERT (*Program Evaluation and Review Technique*) / CPM (*Critical Path Method*), surgiu no final dos anos 50, como “uma técnica que permite analisar aspectos de tempo, custos e recursos e baseia-se na representação do projeto por meio de uma rede, onde as atividades, representadas por flechas ou blocos, indicam as relações de correspondência entre os eventos importantes do projeto.” (<a href="#PRADO">PRADO</a>, 1998).<br>
+
+Conforme descrito por <a href="#CAVALCANTI">Cavalcanti</a> (2011), para estimar a duração de um projeto, é necessário elaborar uma lista de atividades, seu sequenciamento e iteração (dependências), estimar a quantidade de tempo para executar cada uma delas, conhecer todos os recursos disponíveis e a produtividade de cada um.<br>
+
+De acordo com <a href="#VARGAS">VARGAS</a> (2009), o caminho crítico consiste na rota mais longa desde o início até o final do projeto e qualquer atraso no caminho crítico atrasa o projeto como um todo, enquanto as modificações no tempo das atividades não críticas não têm efeito sobre a data de entrega do projeto. É o caminho com a menor folga de tempo possível e determina a duração do projeto, considerando todas as datas e folgas existentes no período.<br>
+
+Com o intuito de facilitar o entendimento do processo, será utilizado para modelo um projeto fictício.<br>
+
+<p align="center">Tabela 1 - Projeto Fictício<br></p>
+
+Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+Duração     |10|9|13|15|10|9|12|6|9|10|5|12|9|12|13|
+Precedênica |-|a|b|-|d|e|c,f|g|h|i,o|j|-|l|m|n|
+
+<p align="center">Fonte: Autores (2015)<br></p>
+
+
+Para melhor acompanhamento do desenvolvimento do projeto, algumas ferramentas são utilizadas, tais como:<br>
+
+
+- Redes de precedência: Utilizado para montar o sequenciamento de realização das atividades do projeto.<br>
+
+Segundo <a href="#PMBOK">PMBOK</a> (2013), o método do diagrama de precedência é uma técnica usada para construir um modelo de cronograma em que as atividades são representadas por nós e ligadas graficamente por um ou mais relacionamentos lógicos para mostrar a sequência em que as atividades devem ser executadas. Atividade no nó é um método de representação de um diagrama de precedência. Este é o método usado pela maioria dos pacotes de software de gerenciamento de projetos.<br>
+<!--
+<p align="center">
+Figura 1 – Rede de precedência<br> 
+<p align="center">
+![](fig01.png){ width=50% }
+Fonte: Autores (2015)</p><br>
+-->
+
+Seguindo o modelo abaixo, tem-se a seguinte rede de precedência, para o preenchimento das datas de início mais cedo, coloca-se como data inicial o primeiro dia e soma-se a duração da atividade. Para o preenchimento da data de início mais tarde o processo é no sentido inverso, utiliza-se a data de início da última tarefa e subtrai-se a duração da atividade anterior.<br>
+<!--
+<p align="center">
+Figura 2 – Modelo para cálculo das datas de início mais cedo e mais tarde<br>
+![](fig02.png){ width=30% }
+<br>
+Fonte: Adaptado de <a href="#PRADO">Prado</a> (1998)</p><br>
+-->
+
+<!--
+<p align="center">
+Figura 3 – Determinação do caminho crítico<br>
+![](fig03.png)
+Fonte: Autores (2015)</p><br>
+-->
+Com a determinação das datas de início mais cedo e mais tarde é possível identificar as folgas. Segundo Kelling (2014) as folgas podem ser classificadas em:<br>
+
+
+ - Folga total: é o espaço de tempo que uma atividade pode ser adiada sem comprometer a data final de um projeto;<br>
+ - Folga livre: é o tempo que é possível atrasar o início de uma atividade sem adiar o início das atividades sucessoras.<br>
+ 
+ Sendo que as atividades com a menor folga são conhecidas como atividades críticas e formam o caminho crítico do projeto. No exemplo que está sendo utilizado neste estudo, no gráfico anterior, o caminho crítico foi identificado pelas setas em vermelho.<br>
+
+
+- Gráfico de Gantt: Segundo <a href="#BORGES">Borges</a> et al (2013), o Gráfico de Gantt é uma das ferramentas mais utilizadas dentro dos processos produtivos em muitos setores; foi inventado por Henry L. Gantt (1861-1919) no ano de 1917, e representa o tempo de realização da cada uma das atividades do projeto como barras horizontais no gráfico. <br>
+
+Utilizando o mesmo modelo, teremos a representação visual conforme a figura abaixo.
+<!--
+<p align="center">Figura 4 – Gráfico de Gantt do caminho crítico<br>
+![](fig04.png)
+  <br> 
+Fonte: Autores (2015)</p><br>
+
+<h4 id="TOC">
+2.3. Teoria das restrições (*Theory Of Constrain - TOC*)
+</h4>
+-->
+
+A teoria das restrições teve seu início na década de 70, e tornou-se popular com a publicação do livro “A Meta” de Eliyahu Goldratt, em 1986. Segundo <a href="#GOLDRATT98">Goldratt</a> (1998) a restrição de um sistema é nada mais do que qualquer coisa que impeça o sistema de atingir um desempenho maior em relação a sua meta. Neste livro na teoria das restrições são propostos cinco passos para aumentar o desempenho de um sistema. São eles:<br>
+
+
+a) Identificar a restrição;<br>
+b) Explorar a restrição;<br>
+c) Subordinar tudo e todos à restrição;<br>
+d) Elevar a restrição;<br>
+e) Não permita que a sua inércia seja a restrição do sistema, volte ao primeiro passo.<br>
+
+A aplicação desta teoria em gerenciamento de projetos é denominada Método da Corrente Crítica, que será apresentada no próximo tópico.<br>
+
+<h4 id="MetCC">2.4. O método da corrente crítica</h4>
+
+Seguindo os 5 passos para aumentar o desempenho de um sistema, proposto por <a href="#GOLDRATT98">Goldratt</a> (1998), a restrição de um projeto é a sua corrente crítica. A maior cadeia de atividades dependente entre si por pertencerem ao mesmo caminho ou por serem executadas por um mesmo recurso. <br>
+
+No passo seguinte, explorar a restrição, a proposta é remover a segurança alocada em cada atividade individualmente e aloca-las ao final do projeto na forma de um pulmão. Ao definir estimativas de duração para as atividades, à pratica comum é de se embutir alguma segurança de forma que a estimativa tenha um percentual alto de ser cumprida. Ocorre que durante a execução, poucas antecipações e muitos atrasos são propagados para as atividades seguintes. Isso ocorre pelos seguintes fatores:<br>
+
+
+- Lei de Parkinson: Refere-se à “tendência das pessoas de inflacionar o trabalho proporcionalmente ao tempo disponível para realizá-lo” (<a href="#PARKINSON">PARKINSON</a>, 2008); isto é, cada atividade ocupará toda a duração para a qual está programada; mesmo que não seja necessário o consumo de todo tempo estimado para executá-lo, para que não seja passada a ideia de superestimação da mesma.<br>
+- Síndrome do Estudante: Segundo <a href="#COURI">Couri</a> (2010), é a tendência dos estudantes de executar a tarefa apenas quando ela se tornar urgente, sob a alegação de que o tempo previsto para a execução da tarefa era insuficiente.<br>
+- Multitarefa Nociva: Conforme descrito por <a href="#PIRES">Pires</a> (2012) a multitarefa nociva ocorre quando um mesmo recurso é disputado por diferentes projetos, ou por diferentes atividades no mesmo projeto. É comum o recurso mudar para outra atividade antes de terminar a atual, ocorrendo a perda nos tempos para suspender e retomar (setup) as atividades. Fatores que levam a ocorrência da multitarefa são a falta de definição clara de prioridades para os responsáveis pelos recursos e a falta de conhecimento claro das reservas reais no tempo do projeto.<br>
+
+Segundo <a href="#COURI">Couri</a> (2010), a corrente crítica é um método que ajusta as folgas, chamadas de “pulmões”, de modo a minimizar o desperdício de tempo, preservando, porém, a segurança do prazo final.<br>
+
+Utilizando o projeto fictício como exemplo, teremos então as seguintes durações reajustadas e seu respectivo gráfico de Gantt.
+
+<p align="center">Tabela 2 – Ajuste das durações pelo caminho crítico</p>
+
+Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+Duração     |7|6|9|10|7|6|8|4|6|7|3|8|6|8|9|
+Redução     |3|3|4|5|3|3|4|2|3|3|3|4|3|4|4|
+<p align="center">Fonte: Autores (2015)</p><br>
+
+<!--
+<p align="center">Figura 5 – Gráfico de Gantt da corrente crítica<br>
+ ![](fig05.png)
+  <br>
+Fonte: Autores (2015)</p><br>
+
+<h3 id="comparativo">3. Comparativo entre o método PERT/CPM e o método da corrente crítice </h3>
+-->
+
+Para maior facilidade no entendimento de cada uma das visões, este estudo apresenta um comparativo entre as formas de avaliação utilizadas para acompanhamento da evolução do projeto pelo método PERT/CPM e o Método da Corrente Crítica.<br>
+
+Usualmente o método PERT/CPM utiliza a curva “S” para acompanhar a evolução de um projeto; enquanto método da Corrente Crítica utiliza o gráfico do pulmão (*fever chart*).<br>
+
+Para ilustrar a variação de interpretação entre as metodologias, serão realizados dois avanços de sete dias. No primeiro avanço, a tarefa “d” ficará com cinco dias de duração restante para conclusão da mesma.<br>
+
+<p align="center">
+Tabela 3 – Avanço de 7 dias no caminho crítico</p>
+|Avanço - 7 dias|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+|Duração     |10|9|13|15|10|9|12|6|9|10|5|12|9|12|13|
+|Avanço      ||||10||||||||||||
+|Duranção Restante      |10|9|13|5|10|9|12|6|9|10|5|12|9|12|13|
+<p align="center"> Fonte: Autores (2015)<br></p>
+
+A figura 6 representa o avanço de dez dias no gráfico de Gantt. É possível observar que o realizado foi superior ao planejado.<br>
+<!--
+<p align="center"> Figura 6 – Gráfico de Gantt com avanço de 7 dias no caminho crítico<br>
+ ![](fig06.png)
+ <br>Fonte: Autores (2015)</p><br>
+-->
+
+Na tabela 4 abaixo, a tarefa “d” permanece com cinco dias restantes para sua conclusão, mas pode-se observar na figura 7 que mesmo tendo este tempo para sua conclusão, na metodologia da corrente crítica o avanço realizado não atingiu o resultado esperado no planejamento, e refletiu no consumo de mais de dois dias no pulmão do projeto.<br>
+
+<p align="center">Tabela 4 – Avanço de 7 dias na corrente crítica</p>
+|Avanço - 7 dias|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+|Duração     |7|6|9|10|7|6|8|4|6|7|3|8|6|8|9|
+|Avanço      ||||5||||||||||||||
+|Duranção Restante      |7|6|9|5|7|6|8|4|6|7|3|8|6|8|9|
+<p align="center">Fonte: Autores (2015)</p><br> 
+<!--
+<p align="center">
+Figura 7 – Gráfico de Gantt com avanço de 7 dias na corrente crítica<br>
+ ![](fig07.png)
+<p align="center">Fonte: Autores (2015)</p><br>
+-->
+
+Mantendo o mesmo princípio realizado no avanço anterior; o projeto terá avanço total de quatorze dias; As tarefas “a”, “b”, “c”, “l”, “m” e “n”, sendo concluídas, isto é, a duração restante sendo zerada e a tarefa “d” passando a ter três dias restantes para sua conclusão. A representação deste avanço para a metodologia do caminho crítico está representada na tabela 5 abaixo.<br>
+
+<p align="center">Tabela 5 – Avanço de 14 dias no caminho crítico</p>
+
+|Avanço - 14 dias|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+|Duração     |10|9|13|15|10|9|12|6|9|10|5|12|9|12|13|
+|Avanço      |10|9|13|12||||||||12|9|12||
+|Duranção Restante      |0|0|0|3|10|9|12|6|9|10|5|0|0|0|13|
+
+<p align="center">Fonte: Autores (2015)</p><br>
+
+A figura 8 demonstra que o caminho crítico permanece sendo o mesmo, mas que o projeto 
+apresenta atraso de dois dias em sua conclusão estimada, mesmo tendo realizado mais do que 
+esperado nas tarefas não críticas.<br>
+<!--
+<p align="center">Figura 8 – Gráfico de Gantt com avanço de 14 dias no caminho crítico
+ ![](fig08.png)
+Fonte: Autores (2015)</p><br>
+-->
+
+Quando se reflete o mesmo avanço na metodologia da corrente crítica, identifica-se na figura 9, que o atraso refletiu no consumo de aproximadamente mais cinco dias no pulmão, ainda não ocasionando atraso na conclusão prevista para o projeto.<br>
+
+<p align="center">Tabela 6 – Avanço de 14 dias na corrente crítica</p>
+|Avanço - 14 dias|
+------------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Atividade   |a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|
+|Duração     |7|6|9|10|7|6|8|4|6|7|3|8|6|8|9|
+|Avanço      |7|6|9|7||||||||||8|6|8||
+|Duranção Restante      |0|0|0|3|7|6|8|4|6|7|3|0|0|0|9|
+<p align="center">Fonte: Autores (2015)</p><br>
+<!--
+<p align="center">Figura 9 – Gráfico de Gantt com avanço de 14 dias na corrente crítica
+ ![](fig09.png)
+<br>
+Fonte: Autores (2015)</p><br>
+-->
+
+Conforme mencionado anteriormente, a metodologia do PERT/CPM utiliza o gráfico da curva “S’ para acompanhar a evolução do projeto; na figura 10 temos a representação dos dois avanços realizados. O valor encontrado no primeiro avanço foi de 6%, enquanto eram planejados 14%; no segundo avanço obteve-se o resultado de 50% de avanço no projeto, enquanto o planejado era de 27%. <br>
+<!--
+<p align="center">Figura 10 – Gráfico da curva “S”<br>
+ ![](fig10.png)
+<br>
+Fonte: Autores (2015)</p><br>
+-->
+
+A metodologia da Corrente Crítica utiliza o gráfico do pulmão para acompanhar o avanço de seu projeto; na figura 11 temos a representação do ocorrido no projeto em questão. <br>
+<!--
+<p align="center">Figura 11 – Gráfico de avanço do pulmão<br>
+![](fig11.png)
+<br>
+Fonte: Autores (2015)</p><br>
+-->
+
+Os valores encontrados no primeiro avanço foram de 10% de andamento do projeto e quase 8% do pulmão consumido e no segundo avanço, os valores encontrados foram 14% e 27% respectivamente.<br>
+
+<h4 id="interp">3.1. Interpretação dos resultados</h4>
+
+Conforme verificado no gráfico da curva “S”, figura 10, o primeiro avanço indica que houve uma evolução de 6%, abaixo do planejado 14%; mas que no segundo avanço, houve uma recuperação; 50% do projeto realizado enquanto era esperado um avanço de 27%.  Tomando por base apenas esta forma de interpretação, haveria a tendência a acreditar que o projeto terminaria antes do planejado, mas pode-se observar que o atraso ocorrido na execução da tarefa crítica “d” refletiu no atraso de dois dias na estimativa de conclusão do projeto.<br>
+
+Ao aplicar estes mesmos resultados na metodologia da corrente crítica, evidencia-se que a execução das tarefas não críticas, não reflete em avanço efetivo no projeto, e isto é observado no consumo elevado do pulmão do projeto enquanto não houve avanço significativo na corrente crítica.<br>
+
+<h4 id="ResComp">3.2. Resumo comparativo</h4>
+
+Para facilitar a interpretação dos resultados, a tabela a seguir indica as principais causas e fatores de divergência.<br>
+<!--
+<p align="center">Tabela 7: Diferenças de filosofia entre PERT/CPM e corrente crítica<br>
+![](figtab01.jpg)
+Fonte: Adaptado de <a href="#LECHLER">Lechler</a>, Ronen e Stohr (2005)</p><br>
+-->
+
+<h3 id="ConsFinais">4. Considerações finais</h3>
+
+Uma das principais mudanças ocasionadas pela metodologia da corrente crítica é a alteração cultural no planejamento dos projetos, pois como mencionado anteriormente, há um corte no tempo estimado tradicional entre 30 e 50%, reduzindo assim o efeito da lei de <a href="#PARKINSON">Parkinson</a> (2008), e minimizando a possibilidade de utilização deste tempo na procrastinação de execução das atividades, seja pelo efeito da síndrome do estudante ou pela multitarefa nociva.<br>
+Outra alteração encontrada é do momento planejado de início de cada atividade, no PERT/CPM elas iniciam o mais cedo possível enquanto que na corrente critica são programadas para iniciar o mais tarde possível. Esta alteração reflete também na definição do caminho crítico, pois além de em ambos os casos ter a identificação baseada na cadeia mais longa baseada nas atividades, na metodologia do caminho crítico também são consideradas as disponibilidades de recursos. O que neste caso ocasiona a maximização dos recursos focada diretamente nos gargalos, contrapondo o que ocorre na metodologia do PERT/CPM, onde é estimulada a utilização máxima dos recursos em todas as tarefas.<br>
+Outro fato que ressalta a importância na alteração da metodologia a ser utilizada na gestão de um projeto é a forma de controle da evolução; conforme demonstrado anteriormente, a metodologia do PERT/COM utiliza o gráfico da curva “S” para acompanhamento, e no modelo utilizado como exemplo neste estudo, ficou evidenciado que mesmo apresentando uma evolução melhor do que o planejado, o projeto sofreu um atraso devido aos esforços terem sidos concentrados em tarefas não críticas. A mesma evolução no projeto sendo aplicada na metodologia da corrente crítica identificou o consumo em mais de um quarto do pulmão do projeto, não representando atraso no mesmo, mas aumentou a criticidade na execução das tarefas críticas. Outra evidência importante foi o aumento na identificação de onde concentrar os esforços, consumindo assim menos tempo na tomada de ações. <br>
+Toda mudança gera desconforto, mas os resultados que podem ser obtidos com a alteração da metodologia na gestão de projetos possibilitam ganhos representativos em produtividade e atendimento do escopo, maximizando os resultados.<br>
+
+<h3 id="Limit">5. Limitações</h3>
+
+Este estudo buscou traçar um comparativo entre as metodologias, limitando-se em não aprofundar sobre as ferramentas existentes no mercado.<br>
+
+<h3 id="Ref">6. Referências</h3>
+
+<A ID="BORGES">BORGES</A>, J. P. V.; OLIVEIRA SOBRINHO, J. ; BARBOSA, R. F.; LIMA, T. G. L. S. **Planejamento e controle da produção de uma indústria de cata-ventos apoiado pelo gráfico de Gantt: Um estudo de caso.** In: Encontro Nacional de Engenharia de Produção - ENEGEP, 2013, Salvador - BA. Disponível em: <http://www.abepro.org.br/biblioteca/enegep2013_TN_STP_177_008_22665.pdf>. Acesso em: 20 abr. 2015.
+
+<a id="CAVALCANTI">CAVALCANTI</A>, Nathalie da Silva. **Utilização da corrente crítica no gerenciamento de uma obra no setor da construção civil.** 2011. 115f. Dissertação de Mestrado – Programa de Pós-Graduação em Engenharia Civil, Universidade Tecnológica Federal do Paraná. Curitiba, 2011. . Disponível em: <http://repositorio.utfpr.edu.br/jspui/bitstream/1/318/1/CT_PPGEC_M_Cavalcanti%2c%20Nathalie%20da%20Silva_2011.pdf>. Acesso em: 21 abr. 2015.
+
+<a id="COPATTO">COPATTO</a>, Alexandre S.; DE SOUZA, Fernando B.. **PERT/CPM versus Corrente Crítica: Pressupostos e Implicações.** XXIII Encontro Nacional de Engenharia de Produção. Ouro Preto, out. 2003. . Disponível em: <http://www.abepro.org.br/biblioteca/ENEGEP2003_TR0504_1638.pdf>. Acesso em: 20 abr. 2015.
+
+<A ID="COURI">COURI</A>, Clarissa de A. **O Método da Corrente Crítica - A Gestão do Tempo nos Projetos.** Dissertação de Mestrado – Pós-Graduação em Engenharia Civil – Universidade Federal Fluminense,  2010. Disponível em: <http://www.poscivil.uff.br/sites/default/files/dissertacao_tese/microsoft_word_-_dissertacaoclarissadef.pdf>. Acesso em: 21 abr. 2015.
+
+<a id="FINOCCHIO">FINOCCHIO JUNIOR</A>, José. **Programação de parada de plataforma marítima utilizando o método da corrente crítica** [dissertação]. Escola Politécnica da Universidade de São Paulo. Curso de Engenharia. São Paulo, 2009. Disponível em: <http://www.teses.usp.br/teses/disponiveis/3/3135/tde-26012009-133737/publico/DISSERT_Jose_Finocchio.pdf>. Acesso em: 23 abr. 2015.
+
+<a id="FISCHER">FISCHER</A>, E. A **Necessidade da arte.** LTC. 9ª Edição. Rio de Janeiro, 2007.
+
+<A ID="GOLDRATT98">GOLDRATT</A>, E. M. **Corrente crítica.** Nobel. 1ª Edição. São Paulo, 1998.
+
+<A ID="GOLDRATT02">GOLDRATT</A>, E. M. & COX, J. - **A meta: um processo de aprimoramento contínuo.** Nobel. 2ª Edição. São Paulo, 2002.
+
+<A ID="GONÇALVES">GONÇALVES</A>, C. **Produtividade e instituições no Brasil e no mundo: ensinamentos teóricos e empíricos.** In: BARROS, O.; GIAMBIAGI, F. Brasil globalizado. Rio de Janeiro: Campus, 2008.
+
+<A ID=KEELLING">KEELLING</A>, R. Branco, R. H. F.; **Gestão de Projetos: uma abordagem global.** Saraiva. São Paulo, 2014.
+
+<A ID="LECHLER">LECHLER</A>, T. G; RONEN, B.; STOHR, E. A. Critical chai: a new project management paradigm or old wine in new bottles? Engineering Management Journal, v.17, n4, p. 45-58, dec. 2005. Disponível em: <http://www.researchgate.net/profile/Thomas_Lechler/publication/228337060_Critical_chain_a_new_project_management_paradigm_or_old_wine_in_new_bottles/links/0deec515c293e0c29b000000.pdf>. Acesso em: 23 abr. 2015.
+
+<a id="MARCANTONIO">MARCANTONIO</a>, M. I. P; A corrente crítica aplicada na ferramenta de gestão de projetos MS Project. In: Encontro Nacional de Engenharia de Produção, XXX., 2010,São Carlos. São Paulo, 2010. . Disponível em: <http://www.abepro.org.br/biblioteca/enegep2010_TN_STO_113_739_15576.pdf>. Acesso em: 20 abr. 2015.
+
+<a id="MASSOTE">MASSOTE</a>, A. A. **Modelo de integração de sistemas de gestão ERP com a produção.** In: Encontro Nacional de Engenharia de Produção, XXV, 2005, Porto Alegre. Anais... Porto Alegre: ABEPRO, 2005. Disponível em: <http://www.abepro.org.br/biblioteca/ENEGEP2005_Enegep0901_1366.pdf>. Acesso em: 22 abr. 2015.
+
+<a id="PARKINSON">PARKINSON</a>, C. N. **A Lei de Parkinson.** São Paulo: Nova fronteira, 2008.
+
+<a id="PIRES">PIRES</a>, A. G.; **Estudo e aplicação da corrente crítica no gerenciamento de projetos em um portfólio com restrições de recursos.** Dissertação de Graduação – Programa de Graduação em Engenharia de Produção e Sistemas, Universidade do Estado de Santa Catarina. Joinville, 2012. . Disponível em: <http://www.producao.joinville.udesc.br/tgeps/tgeps/2012-01/TGEPS%20-%20%20Ariana%20Garcia%20Pires.pdf>. Acesso em: 22 abr. 2015.
+
+<a id="PRADO">PRADO</a>, D.- **Administração de projetos com PERT/CPM.** Editora UFMG. 2ª Edição. Belo Horizonte, 1998.
+
+<a id="PMBOK">Project Management Institute.</a> **Um Guia do Conhecimento em Gerenciamento de Projetos (Guia PMBOK®).** — Quinta edição. NewtonSquare: Project Management Institute, 2013.
+
+<a id="VARGAS">VARGAS</a>, Ricardo Viana. **Gerenciamento de Projetos: estabelecendo diferenciais competitivos.** 7ed. Rio de Janeiro: Brasport, 2009.
+
