@@ -23,3 +23,10 @@ toc_float: true
 hide option enables you to include R code but have it hidden by default. Users can then choose to show hidden R code chunks either indvidually or document wide. For example:
 code_folding: hide
   
+  
+##### chrome_print in pdf  
+output:
+  html_document:
+
+knit: pagedown::chrome_print               
+---  

@@ -1,0 +1,27 @@
+---
+title: "concept clickable file links in DT::datatable"
+author: "Prof. Steven Dutt Ross"
+date: "01/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r}
+library(tibble)
+library(DT)
+library(dplyr)
+
+dr = tibble( file = file.path(dir('C:/Users/Hp/Documents/GitHub/Miscellaneous_Functions_Rstats/') ) ) %>%
+  mutate( path = file.path('C:/Users/Hp/Documents/GitHub/Miscellaneous_Functions_Rstats/', file )
+          , path = stringr::str_replace_all( path, ' ', '%20')
+          , link =  paste0('<a  target=_blank href=', path, '>', file,'</a>' ) )
+
+DT::datatable( select(dr, link) , escape = F)
+```
+
