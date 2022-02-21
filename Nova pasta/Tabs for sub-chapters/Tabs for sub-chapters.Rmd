@@ -1,0 +1,70 @@
+---
+title: "tabs for sub chapters"
+author: "Steven"
+date: "28 de julho de 2019"
+output: html_document
+---
+
+<styles>
+.btn {
+    border-width: 0 0px 0px 0px;
+    font-weight: normal;
+    text-transform: ;
+}
+.btn-default {
+    color: #2ecc71;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+</styles>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+## Use buttons or tabs for sub-chapters {.tabset .tabset-fade .tabset-pills}
+***
+Save space in your document using buttons or tabs for sub chapters. Add this code at the end of your title:
+
+### First
+A first section
+
+### Second
+content of sub-chapter #2
+
+### Third
+content of sub-chapter #3
+
+##
+
+***
+Note that I’ve also custom the buttons using this CSS:
+
+
+## Use buttons or tabs for sub-chapters {.tabset .tabset-fade .tabset-pills}
+***
+Save space in your document using buttons or tabs for sub chapters. Add this code at the end of your title:
+
+### SAS
+PROC SQL;   
+  SELECT DISTINCT *  
+  FROM nome_tabela  ;    
+  QUIT;   
+
+### R
+
+nome_tabela %>%  
+  distinct()
+<br>
+<br>
+
+##
+
+***
+
+[Inspiracao](http://rpubs.com/joao_flavio/SAS_vs_R_tratamento_de_dados?fbclid=IwAR3J1Y1OkIxDXt-F11A_mPZvJbtIh_nchXbRKJ7XWRobsGd-VN8A8zm-ro0)
+
+[Inspiracao 2](https://stackoverflow.com/questions/38062706/rmarkdown-how-to-end-tabbed-content)

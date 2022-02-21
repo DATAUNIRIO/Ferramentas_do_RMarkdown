@@ -1,0 +1,37 @@
+---
+title: "Relatório Final de Estatística"
+author: "Guilherme Peçanha & Igor Gonçalves"
+date: "13/02/2022"
+output:
+   rmdformats::robobook:
+    self_contained: true
+    gallery: false
+    highlight: tango
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(readr)
+library(DT)
+library(flextable)
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+library(reactable)
+library(kableExtra)
+library(data.table)
+```
+
+## 1. Introdução
+
+```{r pressure, echo=FALSE, fig.cap="REPRODUÇÃO/RIOT GAMES", out.width= '100%'}
+knitr::include_graphics('C:/Users/Igor/Downloads/sera4.png')
+
+```
+
+League of Legends (ou LOL), é um jogo multiplayer online battle arena (MOBA) desenvolvido e publicado pela Riot Games para Microsoft Windows e macOS desde outubro de 2009, vindo a se tornar um dos jogos mais populares dos últimos tempos e um dos maiores fenômenos do cenário mundial de e-sports, contando com diversas ligas competitivas bem-sucedidas em todos os continentes do Globo. 
+
