@@ -1,0 +1,80 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{css,echo=FALSE}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  font: 400 145%/1.5 Verdana, sans-serif;
+  place-items: center;
+}
+
+p {
+  max-width: 30ch;
+}
+
+mark {
+  -webkit-animation: 100s highlight 1.5s 1 normal forwards;
+          animation: 30s highlight 1.5s 1 normal forwards;
+  background-color: none;
+  background: linear-gradient(90deg, #7efff5 50%, rgba(255, 255, 255, 0) 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+}
+
+@-webkit-keyframes highlight {
+  0% {
+    background-position: 100% 0;
+  }
+  30%, 70% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes highlight {
+  0% {
+    background-position: 100% 0;
+  }
+  30%, 70% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+```
+
+
+
+## Quarto
+
+Quarto enables <mark>you to weave together content and executable code</mark>  into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+Cocoa lemon <mark>lime minty black beanwraps</mark> heat dark chocolate scotch bonnet pepper cayenne. <mark>Cozy butternut balsamic</mark> vinaigrette banana chocolate peanut butter.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
